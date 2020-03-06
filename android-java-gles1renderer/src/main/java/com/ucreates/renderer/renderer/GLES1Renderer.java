@@ -13,19 +13,23 @@ import android.opengl.GLES11;
 import android.renderscript.Float3;
 import com.ucreates.renderer.asset.BaseAsset;
 import com.ucreates.renderer.camera.GLES1Camera;
+import com.ucreates.renderer.enviroment.GLES1Light;
 import com.ucreates.renderer.screen.Viewport;
 import com.ucreates.renderer.transform.matrix.ModelViewTransformMatrix;
 import com.ucreates.renderer.transform.matrix.ProjectonTransfomMatrix;
+import java.util.ArrayList;
 import javax.microedition.khronos.opengles.GL10;
 public class GLES1Renderer {
     public static final int DIMENSION2D = 2;
     public static final int DIMENSION3D = 3;
     public static final int RGBA = 4;
+    public ArrayList<GLES1Light> lights;
     private ProjectonTransfomMatrix projectonTransformMatrix;
     private ModelViewTransformMatrix modelViewTransformMatrix;
     public Viewport viewport;
     public GLES1Camera camera;
     public void create() {
+        this.lights = new ArrayList<GLES1Light>();
         this.projectonTransformMatrix = new ProjectonTransfomMatrix();
         this.modelViewTransformMatrix = new ModelViewTransformMatrix();
         this.viewport = new Viewport();
@@ -59,11 +63,28 @@ public class GLES1Renderer {
     public void render(BaseAsset asset) {
         GLES11.glEnable(GLES11.GL_DEPTH_TEST);
         GLES11.glEnable(GLES11.GL_CULL_FACE);
+        if (0 < this.lights.size()) {
+            GLES11.glEnable(GLES11.GL_NORMALIZE);
+            GLES11.glEnable(GLES11.GL_LIGHTING);
+            GLES11.glEnable(GLES11.GL_COLOR_MATERIAL);
+            for (GLES1Light light : this.lights) {
+                light.enable();
+            }
+        }
         GLES11.glEnableClientState(GLES11.GL_VERTEX_ARRAY);
         GLES11.glEnableClientState(GLES11.GL_COLOR_ARRAY);
+        if (0 < this.lights.size()) {
+            GLES11.glEnableClientState(GLES11.GL_NORMAL_ARRAY);
+        }
         GLES11.glCullFace(GLES11.GL_BACK);
+        for (GLES1Light light : this.lights) {
+            light.illuminate();
+        }
         GLES11.glVertexPointer(asset.vertex.dimension, GLES11.GL_FLOAT, 0, asset.vertex.vertices);
         GLES11.glColorPointer(RGBA, GLES11.GL_FLOAT, 0, asset.vertex.colors);
+        if (0 < this.lights.size()) {
+            GLES11.glNormalPointer(GLES11.GL_FLOAT, 0, asset.vertex.normals);
+        }
         float tx = asset.transform.position.x;
         float ty = asset.transform.position.y;
         float tz = asset.transform.position.z;
@@ -83,8 +104,23 @@ public class GLES1Renderer {
         GLES11.glPopMatrix();
         GLES11.glDisableClientState(GLES11.GL_VERTEX_ARRAY);
         GLES11.glDisableClientState(GLES11.GL_COLOR_ARRAY);
+        if (0 < this.lights.size()) {
+            GLES11.glDisableClientState(GLES11.GL_NORMAL_ARRAY);
+            for (GLES1Light light : this.lights) {
+                light.disable();
+            }
+            GLES11.glEnable(GLES11.GL_COLOR_MATERIAL);
+            GLES11.glEnable(GLES11.GL_LIGHTING);
+        }
         GLES11.glDisable(GLES11.GL_CULL_FACE);
         GLES11.glDisable(GLES11.GL_DEPTH_TEST);
+        return;
+    }
+    public void addLight(GLES1Light light) {
+        if (GLES11.GL_MAX_LIGHTS < this.lights.size()) {
+            return;
+        }
+        this.lights.add(light);
         return;
     }
 }
