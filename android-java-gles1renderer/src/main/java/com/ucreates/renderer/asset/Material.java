@@ -7,66 +7,26 @@
 // If such findings are accepted at any time.
 // We hope the tips and helpful in developing.
 // ======================================================================
-package com.ucreates.renderer.enviroment;
+package com.ucreates.renderer.asset;
 import android.opengl.GLES11;
 import com.ucreates.renderer.entity.GLESColor;
 import com.ucreates.renderer.io.memory.Allocator;
 import java.nio.FloatBuffer;
-public class GLES1Light {
-    private int lightId;
-    private FloatBuffer position = null;
-    private FloatBuffer direction = null;
+public class Material {
     private FloatBuffer ambient = null;
     private FloatBuffer diffuse = null;
     private FloatBuffer specular = null;
-    public GLES1Light(int lightId) {
-        this.lightId = lightId;
-        float[] positions = new float[4];
-        positions[3] = 1.0f;
-        this.position = Allocator.allocateFloat(positions.length);
-        this.position.put(positions).position(0);
-    }
-    public void enable() {
-        GLES11.glEnable(this.lightId);
-        return;
-    }
-    public void disable() {
-        GLES11.glDisable(this.lightId);
-        return;
-    }
-    public void illuminate() {
-        GLES11.glLightfv(this.lightId, GLES11.GL_POSITION, this.position);
+    public Material() {}
+    public void reflect() {
         if (null != this.ambient) {
-            GLES11.glLightfv(this.lightId, GLES11.GL_AMBIENT, this.ambient);
+            GLES11.glMaterialfv(GLES11.GL_FRONT_AND_BACK, GLES11.GL_AMBIENT, this.ambient);
         }
         if (null != this.diffuse) {
-            GLES11.glLightfv(this.lightId, GLES11.GL_DIFFUSE, this.diffuse);
+            GLES11.glMaterialfv(GLES11.GL_FRONT_AND_BACK, GLES11.GL_DIFFUSE, this.diffuse);
         }
         if (null != this.specular) {
-            GLES11.glLightfv(this.lightId, GLES11.GL_SPECULAR, this.specular);
+            GLES11.glMaterialfv(GLES11.GL_FRONT_AND_BACK, GLES11.GL_SPECULAR, this.specular);
         }
-        if (null != this.direction) {
-            GLES11.glLightfv(this.lightId, GLES11.GL_SPOT_DIRECTION, this.direction);
-        }
-        return;
-    }
-    public void setPosition(float x, float y, float z) {
-        this.position.put(0, x);
-        this.position.put(1, y);
-        this.position.put(2, z);
-        this.position.position(0);
-        return;
-    }
-    public void setDirection(float x, float y, float z) {
-        if (null == this.direction) {
-            float[] directions = new float[4];
-            this.direction = Allocator.allocateFloat(directions.length);
-            this.direction.put(directions).position(0);
-        }
-        this.direction.put(0, x);
-        this.direction.put(1, y);
-        this.direction.put(2, z);
-        this.direction.position(0);
         return;
     }
     public void setAmbient(GLESColor color) {

@@ -15,6 +15,7 @@ public abstract class BaseAsset {
     public int renderMode;
     public Transform transform;
     public VertexArray vertex;
+    public Material material;
     protected float width;
     protected float height;
     protected float depth;
@@ -22,9 +23,14 @@ public abstract class BaseAsset {
     public BaseAsset() {
         this.transform = new Transform();
         this.vertex = null;
+        this.material = null;
         this.renderMode = 0;
     }
     public void create() {
+        return;
+    }
+    public void setMaterial(Material material) {
+        this.material = material;
         return;
     }
 }

@@ -66,7 +66,9 @@ public class GLES1Renderer {
         if (0 < this.lights.size()) {
             GLES11.glEnable(GLES11.GL_NORMALIZE);
             GLES11.glEnable(GLES11.GL_LIGHTING);
-            GLES11.glEnable(GLES11.GL_COLOR_MATERIAL);
+            if (null == asset.material) {
+                GLES11.glEnable(GLES11.GL_COLOR_MATERIAL);
+            }
             for (GLES1Light light : this.lights) {
                 light.enable();
             }
@@ -100,6 +102,9 @@ public class GLES1Renderer {
         GLES11.glRotatef(rx, 1.0f, 0.0f, 0.0f);
         GLES11.glRotatef(ry, 0.0f, 1.0f, 0.0f);
         GLES11.glRotatef(rz, 0.0f, 0.0f, 1.0f);
+        if (null != asset.material) {
+            asset.material.reflect();
+        }
         GLES11.glDrawArrays(asset.renderMode, 0, asset.vertex.count);
         GLES11.glPopMatrix();
         GLES11.glDisableClientState(GLES11.GL_VERTEX_ARRAY);
@@ -109,8 +114,11 @@ public class GLES1Renderer {
             for (GLES1Light light : this.lights) {
                 light.disable();
             }
-            GLES11.glEnable(GLES11.GL_COLOR_MATERIAL);
-            GLES11.glEnable(GLES11.GL_LIGHTING);
+            if (null == asset.material) {
+                GLES11.glDisable(GLES11.GL_COLOR_MATERIAL);
+            }
+            GLES11.glDisable(GLES11.GL_LIGHTING);
+            GLES11.glDisable(GLES11.GL_NORMALIZE);
         }
         GLES11.glDisable(GLES11.GL_CULL_FACE);
         GLES11.glDisable(GLES11.GL_DEPTH_TEST);
