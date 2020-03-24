@@ -19,6 +19,7 @@ public class VertexArray {
     public FloatBuffer vertices;
     public FloatBuffer colors;
     public FloatBuffer normals;
+    public FloatBuffer uvs;
     public VertexArray(int dimension) {
         this.dimension = dimension;
     }
@@ -39,6 +40,11 @@ public class VertexArray {
     public void setNormals(float[] normalArray) {
         this.normals = Allocator.allocateFloat(normalArray.length);
         this.normals.put(normalArray).position(0);
+        return;
+    }
+    public void setUVs(float[] uvArray) {
+        this.uvs = Allocator.allocateFloat(uvArray.length);
+        this.uvs.put(uvArray).position(0);
         return;
     }
     public void setRandomColor() {

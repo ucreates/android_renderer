@@ -63,6 +63,9 @@ public class GLES1Renderer {
     public void render(BaseAsset asset) {
         GLES11.glEnable(GLES11.GL_DEPTH_TEST);
         GLES11.glEnable(GLES11.GL_CULL_FACE);
+        if (null != asset.texture) {
+            GLES11.glEnable(GLES11.GL_TEXTURE_2D);
+        }
         if (0 < this.lights.size()) {
             GLES11.glEnable(GLES11.GL_NORMALIZE);
             GLES11.glEnable(GLES11.GL_LIGHTING);
@@ -75,6 +78,9 @@ public class GLES1Renderer {
         }
         GLES11.glEnableClientState(GLES11.GL_VERTEX_ARRAY);
         GLES11.glEnableClientState(GLES11.GL_COLOR_ARRAY);
+        if (null != asset.texture) {
+            GLES11.glEnableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
+        }
         if (0 < this.lights.size()) {
             GLES11.glEnableClientState(GLES11.GL_NORMAL_ARRAY);
         }
@@ -84,6 +90,10 @@ public class GLES1Renderer {
         }
         GLES11.glVertexPointer(asset.vertex.dimension, GLES11.GL_FLOAT, 0, asset.vertex.vertices);
         GLES11.glColorPointer(RGBA, GLES11.GL_FLOAT, 0, asset.vertex.colors);
+        if (null != asset.texture) {
+            GLES11.glTexCoordPointer(2, GLES11.GL_FLOAT, 0, asset.vertex.uvs);
+            GLES11.glBindTexture(GLES11.GL_TEXTURE_2D, asset.texture.textureId);
+        }
         if (0 < this.lights.size()) {
             GLES11.glNormalPointer(GLES11.GL_FLOAT, 0, asset.vertex.normals);
         }
@@ -119,6 +129,10 @@ public class GLES1Renderer {
             }
             GLES11.glDisable(GLES11.GL_LIGHTING);
             GLES11.glDisable(GLES11.GL_NORMALIZE);
+        }
+        if (null != asset.texture) {
+            GLES11.glDisableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
+            GLES11.glDisable(GLES11.GL_TEXTURE_2D);
         }
         GLES11.glDisable(GLES11.GL_CULL_FACE);
         GLES11.glDisable(GLES11.GL_DEPTH_TEST);

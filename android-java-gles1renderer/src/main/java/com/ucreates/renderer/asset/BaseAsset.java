@@ -8,6 +8,7 @@
 // We hope the tips and helpful in developing.
 // ======================================================================
 package com.ucreates.renderer.asset;
+import android.content.Context;
 import com.ucreates.renderer.entity.GLESColor;
 import com.ucreates.renderer.entity.Transform;
 import com.ucreates.renderer.entity.VertexArray;
@@ -16,6 +17,7 @@ public abstract class BaseAsset {
     public Transform transform;
     public VertexArray vertex;
     public Material material;
+    public TextureAsset texture;
     protected float width;
     protected float height;
     protected float depth;
@@ -24,9 +26,13 @@ public abstract class BaseAsset {
         this.transform = new Transform();
         this.vertex = null;
         this.material = null;
+        this.texture = null;
         this.renderMode = 0;
     }
     public void create() {
+        return;
+    }
+    public void create(String texturePath, Context context) {
         return;
     }
     public void setMaterial(Material material) {
