@@ -8,8 +8,10 @@
 // We hope the tips and helpful in developing.
 // ======================================================================
 package com.ucreates.renderer.asset.polygon;
+import android.content.Context;
 import android.opengl.GLES11;
 import com.ucreates.renderer.asset.BaseAsset;
+import com.ucreates.renderer.asset.TextureAsset;
 import com.ucreates.renderer.entity.GLESColor;
 import com.ucreates.renderer.entity.VertexArray;
 public class RectangleAsset1 extends BaseAsset {
@@ -24,7 +26,7 @@ public class RectangleAsset1 extends BaseAsset {
     public void create() {
         float x = 0.5f * this.width;
         float y = 0.5f * this.height;
-        float verticies[] = {
+        float vertices[] = {
             // left down
             -x,
             -y,
@@ -44,7 +46,7 @@ public class RectangleAsset1 extends BaseAsset {
             -x,
             y,
         };
-        float vertexColors[] = {
+        float colors[] = {
             // left down
             this.color.r,
             this.color.g,
@@ -76,10 +78,95 @@ public class RectangleAsset1 extends BaseAsset {
             this.color.b,
             this.color.a,
         };
-        int vertexCount = verticies.length / this.vertex.dimension;
+        int vertexCount = vertices.length / this.vertex.dimension;
         this.vertex.setVertexCount(vertexCount);
-        this.vertex.setVertices(verticies);
-        this.vertex.setColors(vertexColors);
+        this.vertex.setVertices(vertices);
+        this.vertex.setColors(colors);
+        return;
+    }
+    @Override
+    public void create(String texturePath, Context context) {
+        this.texture = new TextureAsset();
+        this.texture.load(texturePath, context);
+        float x = 0.5f * this.width;
+        float y = 0.5f * this.height;
+        float vertices[] = {
+            // left down
+            -x,
+            -y,
+            // right down
+            x,
+            -y,
+            // left top
+            -x,
+            y,
+            // right down
+            x,
+            -y,
+            // right top
+            x,
+            y,
+            // left top
+            -x,
+            y,
+        };
+        float colors[] = {
+            // left down
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // right down
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // left top
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // right down
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // right top
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // left top
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+        };
+        float uvs[] = {
+            // left down
+            0.0f,
+            1.0f,
+            // right down
+            1.0f,
+            1.0f,
+            // left up
+            0.0f,
+            0.0f,
+            // right down
+            1.0f,
+            1.0f,
+            // right up
+            1.0f,
+            0.0f,
+            // left up
+            0.0f,
+            0.0f,
+        };
+        int vertexCount = vertices.length / this.vertex.dimension;
+        this.vertex.setVertexCount(vertexCount);
+        this.vertex.setVertices(vertices);
+        this.vertex.setColors(colors);
+        this.vertex.setUVs(uvs);
         return;
     }
 }
