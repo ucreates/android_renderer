@@ -8,8 +8,10 @@
 // We hope the tips and helpful in developing.
 // ======================================================================
 package com.ucreates.renderer.asset.mesh;
+import android.content.Context;
 import android.opengl.GLES11;
 import com.ucreates.renderer.asset.BaseAsset;
+import com.ucreates.renderer.asset.TextureAsset;
 import com.ucreates.renderer.entity.GLESColor;
 import com.ucreates.renderer.entity.VertexArray;
 import com.ucreates.renderer.io.memory.Allocator;
@@ -70,6 +72,72 @@ public class CircleAsset1 extends BaseAsset {
         this.vertex.setVertexCount(vertexCount);
         this.vertex.setVertices(vertices);
         this.vertex.setColors(colors);
+        return;
+    }
+    @Override
+    public void create(String texturePath, Context context) {
+        this.texture = new TextureAsset();
+        this.texture.load(texturePath, context);
+        float uratio = this.texture.uvRatio.x;
+        float v1ratio = this.texture.uvRatio.y;
+        float v2ratio = 1.0f - this.texture.uvRatio.y;
+        float curatio = 0.5f * uratio;
+        float cvratio = 0.5f * v1ratio + v2ratio;
+        int vertexCount = this.divideCount * 3;
+        int verticesLength = vertexCount * GLES1Renderer.DIMENSION2D;
+        int vertexMemsize = verticesLength;
+        int colorsLength = vertexCount * GLES1Renderer.RGBA;
+        int colorsMemsize = colorsLength;
+        float[] vertices = new float[vertexMemsize];
+        float[] colors = new float[colorsMemsize];
+        float[] uvs = new float[vertexMemsize];
+        int didx = 0;
+        for (int i = 0; i < verticesLength; i += 6) {
+            double unitDegree = (360.0d / this.divideCount);
+            double degree1 = didx * unitDegree;
+            double degree2 = (didx + 1) * unitDegree;
+            double radian1 = GLES1Angle.toRadian(degree1);
+            double radian2 = GLES1Angle.toRadian(degree2);
+            float x1 = (float) Math.cos(radian1) * this.radius;
+            float y1 = (float) Math.sin(radian1) * this.radius;
+            float x2 = (float) Math.cos(radian2) * this.radius;
+            float y2 = (float) Math.sin(radian2) * this.radius;
+            float u1 = (float) Math.cos(radian1) * 0.5f;
+            float v1 = (float) Math.sin(radian1) * 0.5f;
+            float u2 = (float) Math.cos(radian2) * 0.5f;
+            float v2 = (float) Math.sin(radian2) * 0.5f;
+            vertices[i] = 0;
+            vertices[i + 1] = 0;
+            vertices[i + 2] = x1;
+            vertices[i + 3] = y1;
+            vertices[i + 4] = x2;
+            vertices[i + 5] = y2;
+            uvs[i] = curatio;
+            uvs[i + 1] = cvratio;
+            uvs[i + 2] = u1 * uratio + curatio;
+            uvs[i + 3] = -1 * v1 * v1ratio + cvratio;
+            uvs[i + 4] = u2 * uratio + curatio;
+            uvs[i + 5] = -1 * v2 * v1ratio + cvratio;
+            didx++;
+        }
+        for (int i = 0; i < colorsLength; i += 12) {
+            colors[i] = this.color.r;
+            colors[i + 1] = this.color.g;
+            colors[i + 2] = this.color.b;
+            colors[i + 3] = this.color.a;
+            colors[i + 4] = this.color.r;
+            colors[i + 5] = this.color.g;
+            colors[i + 6] = this.color.b;
+            colors[i + 7] = this.color.a;
+            colors[i + 8] = this.color.r;
+            colors[i + 9] = this.color.g;
+            colors[i + 10] = this.color.b;
+            colors[i + 11] = this.color.a;
+        }
+        this.vertex.setVertexCount(vertexCount);
+        this.vertex.setVertices(vertices);
+        this.vertex.setColors(colors);
+        this.vertex.setUVs(uvs);
         return;
     }
 }
