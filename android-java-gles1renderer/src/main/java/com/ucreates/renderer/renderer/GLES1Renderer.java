@@ -13,6 +13,7 @@ import android.opengl.GLES11;
 import android.renderscript.Float3;
 import com.ucreates.renderer.asset.BaseAsset;
 import com.ucreates.renderer.camera.GLES1Camera;
+import com.ucreates.renderer.enviroment.GLES1Fog;
 import com.ucreates.renderer.enviroment.GLES1Light;
 import com.ucreates.renderer.screen.Viewport;
 import com.ucreates.renderer.transform.matrix.ModelViewTransformMatrix;
@@ -28,6 +29,7 @@ public class GLES1Renderer {
     private ModelViewTransformMatrix modelViewTransformMatrix;
     public Viewport viewport;
     public GLES1Camera camera;
+    private GLES1Fog fog = null;
     public void create() {
         this.lights = new ArrayList<GLES1Light>();
         this.projectonTransformMatrix = new ProjectonTransfomMatrix();
@@ -63,6 +65,9 @@ public class GLES1Renderer {
     public void render(BaseAsset asset) {
         GLES11.glEnable(GLES11.GL_DEPTH_TEST);
         GLES11.glEnable(GLES11.GL_CULL_FACE);
+        if (null != this.fog) {
+            GLES11.glEnable(GLES11.GL_FOG);
+        }
         if (null != asset.texture) {
             GLES11.glEnable(GLES11.GL_TEXTURE_2D);
         }
@@ -112,6 +117,9 @@ public class GLES1Renderer {
         GLES11.glRotatef(rx, 1.0f, 0.0f, 0.0f);
         GLES11.glRotatef(ry, 0.0f, 1.0f, 0.0f);
         GLES11.glRotatef(rz, 0.0f, 0.0f, 1.0f);
+        if (null != this.fog) {
+            this.fog.mist();
+        }
         if (null != asset.material) {
             asset.material.reflect();
         }
@@ -134,6 +142,9 @@ public class GLES1Renderer {
             GLES11.glDisableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
             GLES11.glDisable(GLES11.GL_TEXTURE_2D);
         }
+        if (null != this.fog) {
+            GLES11.glDisable(GLES11.GL_FOG);
+        }
         GLES11.glDisable(GLES11.GL_CULL_FACE);
         GLES11.glDisable(GLES11.GL_DEPTH_TEST);
         return;
@@ -143,6 +154,10 @@ public class GLES1Renderer {
             return;
         }
         this.lights.add(light);
+        return;
+    }
+    public void setFog(GLES1Fog fog) {
+        this.fog = fog;
         return;
     }
 }
