@@ -63,7 +63,11 @@ public class GLES1Renderer {
         return;
     }
     public void render(BaseAsset asset) {
-        GLES11.glEnable(GLES11.GL_DEPTH_TEST);
+        if (null == asset.blend) {
+            GLES11.glEnable(GLES11.GL_DEPTH_TEST);
+        } else {
+            GLES11.glEnable(GLES11.GL_BLEND);
+        }
         GLES11.glEnable(GLES11.GL_CULL_FACE);
         if (null != this.fog) {
             GLES11.glEnable(GLES11.GL_FOG);
@@ -92,6 +96,9 @@ public class GLES1Renderer {
         GLES11.glCullFace(GLES11.GL_BACK);
         for (GLES1Light light : this.lights) {
             light.illuminate();
+        }
+        if (null != asset.blend) {
+            GLES11.glBlendFunc(asset.blend.source, asset.blend.destination);
         }
         GLES11.glVertexPointer(asset.vertex.dimension, GLES11.GL_FLOAT, 0, asset.vertex.vertices);
         GLES11.glColorPointer(RGBA, GLES11.GL_FLOAT, 0, asset.vertex.colors);
@@ -146,7 +153,11 @@ public class GLES1Renderer {
             GLES11.glDisable(GLES11.GL_FOG);
         }
         GLES11.glDisable(GLES11.GL_CULL_FACE);
-        GLES11.glDisable(GLES11.GL_DEPTH_TEST);
+        if (null == asset.blend) {
+            GLES11.glDisable(GLES11.GL_DEPTH_TEST);
+        } else {
+            GLES11.glDisable(GLES11.GL_BLEND);
+        }
         return;
     }
     public void addLight(GLES1Light light) {

@@ -9,6 +9,7 @@
 // ======================================================================
 package com.ucreates.renderer.asset;
 import android.content.Context;
+import com.ucreates.renderer.entity.GLESBlend;
 import com.ucreates.renderer.entity.GLESColor;
 import com.ucreates.renderer.entity.Transform;
 import com.ucreates.renderer.entity.VertexArray;
@@ -18,6 +19,7 @@ public abstract class BaseAsset {
     public VertexArray vertex;
     public Material material;
     public TextureAsset texture;
+    public GLESBlend blend;
     protected float width;
     protected float height;
     protected float depth;
@@ -27,6 +29,7 @@ public abstract class BaseAsset {
         this.vertex = null;
         this.material = null;
         this.texture = null;
+        this.blend = null;
         this.renderMode = 0;
     }
     public void create() {

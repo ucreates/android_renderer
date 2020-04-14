@@ -15,10 +15,22 @@ public class GLESColor {
     public float a;
     public static final GLESColor white = new GLESColor(1.0f, 1.0f, 1.0f, 1.0f);
     public static final GLESColor black = new GLESColor(0.0f, 0.0f, 0.0f, 1.0f);
+    public static final GLESColor red = new GLESColor(1.0f, 0.0f, 0.0f, 1.0f);
+    public static final GLESColor green = new GLESColor(0.0f, 1.0f, 0.0f, 1.0f);
+    public static final GLESColor blue = new GLESColor(0.0f, 0.0f, 1.0f, 1.0f);
     public GLESColor(float r, float g, float b, float a) {
         this.r = r;
         this.g = g;
         this.b = b;
         this.a = a;
+    }
+    public static GLESColor red(float alpha) {
+        return new GLESColor(1.0f, 0.0f, 0.0f, alpha);
+    }
+    public static GLESColor green(float alpha) {
+        return new GLESColor(0.0f, 1.0f, 0.0f, alpha);
+    }
+    public static GLESColor blue(float alpha) {
+        return new GLESColor(0.0f, 0.0f, 1.0f, alpha);
     }
 }
