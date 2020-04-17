@@ -57,4 +57,18 @@ public class VertexArray {
         this.colors.put(tmpColors).position(0);
         return;
     }
+    public void setAlpha(float alpha) {
+        float[] tmpColors = new float[this.colors.capacity()];
+        int index = 1;
+        for (int i = 0; i < tmpColors.length; i++) {
+            if (0 == index % 4) {
+                tmpColors[i] = alpha;
+            } else {
+                tmpColors[i] = this.colors.get(i);
+            }
+            index++;
+        }
+        this.colors.put(tmpColors).position(0);
+        return;
+    }
 }

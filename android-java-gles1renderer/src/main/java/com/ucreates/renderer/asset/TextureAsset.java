@@ -25,6 +25,12 @@ public class TextureAsset {
     public int textureId;
     public Float2 uvRatio;
     public Float2 size;
+    public int alphaComparisonFunction;
+    public float alphaReferenceValue;
+    public TextureAsset() {
+        this.alphaComparisonFunction = GLES11.GL_GREATER;
+        this.alphaReferenceValue = 0.1f;
+    }
     public void load(String path, Context context) {
         AssetManager assetManager = context.getAssets();
         try {

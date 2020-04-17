@@ -74,6 +74,9 @@ public class GLES1Renderer {
         }
         if (null != asset.texture) {
             GLES11.glEnable(GLES11.GL_TEXTURE_2D);
+            if (null != asset.blend) {
+                GLES11.glEnable(GLES11.GL_ALPHA_TEST);
+            }
         }
         if (0 < this.lights.size()) {
             GLES11.glEnable(GLES11.GL_NORMALIZE);
@@ -105,6 +108,9 @@ public class GLES1Renderer {
         if (null != asset.texture) {
             GLES11.glTexCoordPointer(2, GLES11.GL_FLOAT, 0, asset.vertex.uvs);
             GLES11.glBindTexture(GLES11.GL_TEXTURE_2D, asset.texture.textureId);
+            if (null != asset.blend) {
+                GLES11.glAlphaFunc(asset.texture.alphaComparisonFunction, asset.texture.alphaReferenceValue);
+            }
         }
         if (0 < this.lights.size()) {
             GLES11.glNormalPointer(GLES11.GL_FLOAT, 0, asset.vertex.normals);
@@ -148,6 +154,9 @@ public class GLES1Renderer {
         if (null != asset.texture) {
             GLES11.glDisableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
             GLES11.glDisable(GLES11.GL_TEXTURE_2D);
+            if (null != asset.blend) {
+                GLES11.glDisable(GLES11.GL_ALPHA_TEST);
+            }
         }
         if (null != this.fog) {
             GLES11.glDisable(GLES11.GL_FOG);
