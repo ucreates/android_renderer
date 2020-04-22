@@ -133,6 +133,9 @@ public class GLES1Renderer {
         if (null != this.fog) {
             this.fog.mist();
         }
+        if (null != asset.shader) {
+            asset.shader.shade();
+        }
         if (null != asset.material) {
             asset.material.reflect();
         }

@@ -20,6 +20,7 @@ public abstract class BaseAsset {
     public Material material;
     public TextureAsset texture;
     public GLESBlend blend;
+    public GLES1ShaderAsset shader;
     protected float width;
     protected float height;
     protected float depth;
@@ -30,6 +31,7 @@ public abstract class BaseAsset {
         this.material = null;
         this.texture = null;
         this.blend = null;
+        this.shader = null;
         this.renderMode = 0;
     }
     public void create() {
