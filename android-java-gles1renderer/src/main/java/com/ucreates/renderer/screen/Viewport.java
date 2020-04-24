@@ -21,8 +21,9 @@ public class Viewport {
         float g = camera.clearColor.g;
         float b = camera.clearColor.b;
         float a = camera.clearColor.a;
+        GLES11.glClearStencil(0);
         GLES11.glClearColor(r, g, b, a);
-        GLES11.glClear(GLES11.GL_COLOR_BUFFER_BIT | GLES11.GL_DEPTH_BUFFER_BIT);
+        GLES11.glClear(GLES11.GL_COLOR_BUFFER_BIT | GLES11.GL_DEPTH_BUFFER_BIT | GLES11.GL_STENCIL_BUFFER_BIT);
         return;
     }
     public void setScreenSize(Context context, int width, int height) {

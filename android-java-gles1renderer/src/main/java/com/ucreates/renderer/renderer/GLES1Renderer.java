@@ -12,6 +12,7 @@ import android.content.Context;
 import android.opengl.GLES11;
 import android.renderscript.Float3;
 import com.ucreates.renderer.asset.BaseAsset;
+import com.ucreates.renderer.asset.wipe.BaseWipeAsset;
 import com.ucreates.renderer.camera.GLES1Camera;
 import com.ucreates.renderer.enviroment.GLES1Fog;
 import com.ucreates.renderer.enviroment.GLES1Light;
@@ -24,18 +25,22 @@ public class GLES1Renderer {
     public static final int DIMENSION2D = 2;
     public static final int DIMENSION3D = 3;
     public static final int RGBA = 4;
+    public static final int WIPEIN = 1;
+    public static final int WIPEOUT = 2;
     public ArrayList<GLES1Light> lights;
     private ProjectonTransfomMatrix projectonTransformMatrix;
     private ModelViewTransformMatrix modelViewTransformMatrix;
     public Viewport viewport;
     public GLES1Camera camera;
     private GLES1Fog fog = null;
+    private boolean enableStencil;
     public void create() {
         this.lights = new ArrayList<GLES1Light>();
         this.projectonTransformMatrix = new ProjectonTransfomMatrix();
         this.modelViewTransformMatrix = new ModelViewTransformMatrix();
         this.viewport = new Viewport();
         this.camera = new GLES1Camera();
+        this.enableStencil = false;
     }
     public void rebind(Context context, int width, int height) {
         this.viewport.setScreenSize(context, width, height);
@@ -62,11 +67,48 @@ public class GLES1Renderer {
         }
         return;
     }
+    public void render(BaseWipeAsset asset, int wipeType, float delta, float totalTime) {
+        GLES11.glEnable(GLES11.GL_STENCIL_TEST);
+        GLES11.glEnable(GLES11.GL_CULL_FACE);
+        GLES11.glCullFace(GLES11.GL_BACK);
+        GLES11.glStencilFunc(GLES11.GL_ALWAYS, 1, 0xFF);
+        GLES11.glStencilOp(GLES11.GL_REPLACE, GLES11.GL_REPLACE, GLES11.GL_REPLACE);
+        GLES11.glEnableClientState(GLES11.GL_VERTEX_ARRAY);
+        GLES11.glEnableClientState(GLES11.GL_COLOR_ARRAY);
+        GLES11.glVertexPointer(asset.vertex.dimension, GLES11.GL_FLOAT, 0, asset.vertex.vertices);
+        GLES11.glColorPointer(RGBA, GLES11.GL_FLOAT, 0, asset.vertex.colors);
+        float scale = 1.0f;
+        if (WIPEIN == wipeType) {
+            scale = asset.wipeIn(delta, totalTime);
+        } else {
+            scale = asset.wipeOut(delta, totalTime);
+        }
+        GLES11.glPushMatrix();
+        GLES11.glTranslatef(0.0f, 0.0f, 0.0f);
+        GLES11.glScalef(scale, scale, scale);
+        GLES11.glDepthMask(false);
+        GLES11.glColorMask(false, false, false, false);
+        GLES11.glDrawArrays(GLES11.GL_TRIANGLES, 0, asset.vertex.count);
+        GLES11.glColorMask(true, true, true, true);
+        GLES11.glDepthMask(true);
+        GLES11.glPopMatrix();
+        GLES11.glDisableClientState(GLES11.GL_VERTEX_ARRAY);
+        GLES11.glDisableClientState(GLES11.GL_COLOR_ARRAY);
+        GLES11.glStencilFunc(GLES11.GL_EQUAL, 1, 0xFF);
+        GLES11.glStencilOp(GLES11.GL_KEEP, GLES11.GL_KEEP, GLES11.GL_KEEP);
+        GLES11.glDisable(GLES11.GL_CULL_FACE);
+        GLES11.glDisable(GLES11.GL_STENCIL_TEST);
+        this.enableStencil = true;
+        return;
+    }
     public void render(BaseAsset asset) {
         if (null == asset.blend) {
             GLES11.glEnable(GLES11.GL_DEPTH_TEST);
         } else {
             GLES11.glEnable(GLES11.GL_BLEND);
+        }
+        if (false != this.enableStencil) {
+            GLES11.glEnable(GLES11.GL_STENCIL_TEST);
         }
         GLES11.glEnable(GLES11.GL_CULL_FACE);
         if (null != this.fog) {
@@ -165,11 +207,15 @@ public class GLES1Renderer {
             GLES11.glDisable(GLES11.GL_FOG);
         }
         GLES11.glDisable(GLES11.GL_CULL_FACE);
+        if (false != this.enableStencil) {
+            GLES11.glDisable(GLES11.GL_STENCIL_TEST);
+        }
         if (null == asset.blend) {
             GLES11.glDisable(GLES11.GL_DEPTH_TEST);
         } else {
             GLES11.glDisable(GLES11.GL_BLEND);
         }
+        this.enableStencil = false;
         return;
     }
     public void addLight(GLES1Light light) {
