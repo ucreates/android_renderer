@@ -28,7 +28,7 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository url: "file://${repositoryRoot.absolutePath}"
-            pom.version = '1.15.0'
+            pom.version = '1.16.0'
             pom.groupId = 'com.ucreates'
             pom.artifactId = 'renderer'
         }

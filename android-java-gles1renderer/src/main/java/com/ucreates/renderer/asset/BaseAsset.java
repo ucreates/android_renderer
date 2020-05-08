@@ -11,6 +11,7 @@ package com.ucreates.renderer.asset;
 import android.content.Context;
 import com.ucreates.renderer.entity.GLESBlend;
 import com.ucreates.renderer.entity.GLESColor;
+import com.ucreates.renderer.entity.Material;
 import com.ucreates.renderer.entity.Transform;
 import com.ucreates.renderer.entity.VertexArray;
 public abstract class BaseAsset {

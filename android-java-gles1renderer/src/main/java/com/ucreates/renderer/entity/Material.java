@@ -7,16 +7,40 @@
 // If such findings are accepted at any time.
 // We hope the tips and helpful in developing.
 // ======================================================================
-package com.ucreates.renderer.asset;
+package com.ucreates.renderer.entity;
 import android.opengl.GLES11;
-import com.ucreates.renderer.entity.GLESColor;
+import com.ucreates.renderer.asset.TextureAsset;
 import com.ucreates.renderer.io.memory.Allocator;
 import java.nio.FloatBuffer;
 public class Material {
     private FloatBuffer ambient = null;
     private FloatBuffer diffuse = null;
     private FloatBuffer specular = null;
+    public String name = "";
+    public boolean hasTexture = false;
+    public TextureAsset diffuseTexture = null;
     public Material() {}
+    public void enable() {
+        if (false != this.hasTexture) {
+            GLES11.glActiveTexture(GLES11.GL_TEXTURE0);
+            GLES11.glEnable(GLES11.GL_TEXTURE_2D);
+        }
+        if (null != this.diffuseTexture) {
+            GLES11.glActiveTexture(GLES11.GL_TEXTURE2);
+            GLES11.glEnable(GLES11.GL_TEXTURE_2D);
+        }
+    }
+    public void disable() {
+        if (false != this.hasTexture) {
+            GLES11.glDisableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
+            GLES11.glActiveTexture(GLES11.GL_TEXTURE0);
+            GLES11.glDisable(GLES11.GL_TEXTURE_2D);
+        }
+        if (null != this.diffuseTexture) {
+            GLES11.glActiveTexture(GLES11.GL_TEXTURE2);
+            GLES11.glDisable(GLES11.GL_TEXTURE_2D);
+        }
+    }
     public void reflect() {
         if (null != this.ambient) {
             GLES11.glMaterialfv(GLES11.GL_FRONT_AND_BACK, GLES11.GL_AMBIENT, this.ambient);
@@ -27,6 +51,13 @@ public class Material {
         if (null != this.specular) {
             GLES11.glMaterialfv(GLES11.GL_FRONT_AND_BACK, GLES11.GL_SPECULAR, this.specular);
         }
+        if (null != this.diffuseTexture) {
+            GLES11.glClientActiveTexture(GLES11.GL_TEXTURE2);
+            GLES11.glActiveTexture(GLES11.GL_TEXTURE2);
+            GLES11.glBindTexture(GLES11.GL_TEXTURE_2D, this.diffuseTexture.textureId);
+            GLES11.glTexEnvi(GLES11.GL_TEXTURE_ENV, GLES11.GL_TEXTURE_ENV_MODE, GLES11.GL_MODULATE);
+        }
+        GLES11.glActiveTexture(GLES11.GL_TEXTURE0);
         return;
     }
     public void setAmbient(GLESColor color) {
@@ -66,6 +97,21 @@ public class Material {
         this.specular.put(2, color.b);
         this.specular.put(3, 1.0f);
         this.specular.position(0);
+        return;
+    }
+    public void setUVs(FloatBuffer uvs) {
+        if (false != this.hasTexture) {
+            GLES11.glEnableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
+        }
+        if (null != this.diffuseTexture) {
+            GLES11.glActiveTexture(GLES11.GL_TEXTURE2);
+            GLES11.glTexCoordPointer(2, GLES11.GL_FLOAT, 0, uvs);
+        }
+        return;
+    }
+    public void setDiffuseTexture(TextureAsset texture) {
+        this.diffuseTexture = texture;
+        this.hasTexture = true;
         return;
     }
 }

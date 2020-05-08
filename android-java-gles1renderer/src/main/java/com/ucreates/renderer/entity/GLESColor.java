@@ -18,6 +18,12 @@ public class GLESColor {
     public static final GLESColor red = new GLESColor(1.0f, 0.0f, 0.0f, 1.0f);
     public static final GLESColor green = new GLESColor(0.0f, 1.0f, 0.0f, 1.0f);
     public static final GLESColor blue = new GLESColor(0.0f, 0.0f, 1.0f, 1.0f);
+    public GLESColor() {
+        this.r = 1.0f;
+        this.g = 1.0f;
+        this.b = 1.0f;
+        this.a = 1.0f;
+    }
     public GLESColor(float r, float g, float b, float a) {
         this.r = r;
         this.g = g;

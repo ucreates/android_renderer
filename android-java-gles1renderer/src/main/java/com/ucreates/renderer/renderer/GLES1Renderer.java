@@ -14,6 +14,7 @@ import android.renderscript.Float3;
 import com.ucreates.renderer.asset.BaseAsset;
 import com.ucreates.renderer.asset.wipe.BaseWipeAsset;
 import com.ucreates.renderer.camera.GLES1Camera;
+import com.ucreates.renderer.entity.Mesh;
 import com.ucreates.renderer.enviroment.GLES1Fog;
 import com.ucreates.renderer.enviroment.GLES1Light;
 import com.ucreates.renderer.screen.Viewport;
@@ -101,6 +102,12 @@ public class GLES1Renderer {
         this.enableStencil = true;
         return;
     }
+    public void render(ArrayList<Mesh> meshes) {
+        for (Mesh mesh : meshes) {
+            this.render(mesh);
+        }
+        return;
+    }
     public void render(BaseAsset asset) {
         if (null == asset.blend) {
             GLES11.glEnable(GLES11.GL_DEPTH_TEST);
@@ -116,6 +123,11 @@ public class GLES1Renderer {
         }
         if (null != asset.texture) {
             GLES11.glEnable(GLES11.GL_TEXTURE_2D);
+            if (null != asset.blend) {
+                GLES11.glEnable(GLES11.GL_ALPHA_TEST);
+            }
+        } else if (null != asset.material && false != asset.material.hasTexture) {
+            asset.material.enable();
             if (null != asset.blend) {
                 GLES11.glEnable(GLES11.GL_ALPHA_TEST);
             }
@@ -153,6 +165,9 @@ public class GLES1Renderer {
             if (null != asset.blend) {
                 GLES11.glAlphaFunc(asset.texture.alphaComparisonFunction, asset.texture.alphaReferenceValue);
             }
+        }
+        if (null != asset.material) {
+            asset.material.setUVs(asset.vertex.uvs);
         }
         if (0 < this.lights.size()) {
             GLES11.glNormalPointer(GLES11.GL_FLOAT, 0, asset.vertex.normals);
@@ -199,6 +214,11 @@ public class GLES1Renderer {
         if (null != asset.texture) {
             GLES11.glDisableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
             GLES11.glDisable(GLES11.GL_TEXTURE_2D);
+            if (null != asset.blend) {
+                GLES11.glDisable(GLES11.GL_ALPHA_TEST);
+            }
+        } else if (null != asset.material && false != asset.material.hasTexture) {
+            asset.material.disable();
             if (null != asset.blend) {
                 GLES11.glDisable(GLES11.GL_ALPHA_TEST);
             }
