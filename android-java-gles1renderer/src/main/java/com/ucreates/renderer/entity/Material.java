@@ -19,25 +19,42 @@ public class Material {
     public String name = "";
     public boolean hasTexture = false;
     public TextureAsset diffuseTexture = null;
+    public TextureAsset ambientTexture = null;
     public Material() {}
     public void enable() {
         if (false != this.hasTexture) {
+            GLES11.glClientActiveTexture(GLES11.GL_TEXTURE0);
             GLES11.glActiveTexture(GLES11.GL_TEXTURE0);
             GLES11.glEnable(GLES11.GL_TEXTURE_2D);
         }
+        if (null != this.ambientTexture) {
+            GLES11.glClientActiveTexture(GLES11.GL_TEXTURE1);
+            GLES11.glActiveTexture(GLES11.GL_TEXTURE1);
+            GLES11.glEnable(GLES11.GL_TEXTURE_2D);
+        }
         if (null != this.diffuseTexture) {
+            GLES11.glClientActiveTexture(GLES11.GL_TEXTURE2);
             GLES11.glActiveTexture(GLES11.GL_TEXTURE2);
             GLES11.glEnable(GLES11.GL_TEXTURE_2D);
         }
     }
     public void disable() {
         if (false != this.hasTexture) {
-            GLES11.glDisableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
+            GLES11.glClientActiveTexture(GLES11.GL_TEXTURE0);
             GLES11.glActiveTexture(GLES11.GL_TEXTURE0);
+            GLES11.glDisableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
+            GLES11.glDisable(GLES11.GL_TEXTURE_2D);
+        }
+        if (null != this.ambientTexture) {
+            GLES11.glClientActiveTexture(GLES11.GL_TEXTURE1);
+            GLES11.glActiveTexture(GLES11.GL_TEXTURE1);
+            GLES11.glDisableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
             GLES11.glDisable(GLES11.GL_TEXTURE_2D);
         }
         if (null != this.diffuseTexture) {
+            GLES11.glClientActiveTexture(GLES11.GL_TEXTURE2);
             GLES11.glActiveTexture(GLES11.GL_TEXTURE2);
+            GLES11.glDisableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
             GLES11.glDisable(GLES11.GL_TEXTURE_2D);
         }
     }
@@ -50,6 +67,12 @@ public class Material {
         }
         if (null != this.specular) {
             GLES11.glMaterialfv(GLES11.GL_FRONT_AND_BACK, GLES11.GL_SPECULAR, this.specular);
+        }
+        if (null != this.ambientTexture) {
+            GLES11.glClientActiveTexture(GLES11.GL_TEXTURE1);
+            GLES11.glActiveTexture(GLES11.GL_TEXTURE1);
+            GLES11.glBindTexture(GLES11.GL_TEXTURE_2D, this.ambientTexture.textureId);
+            GLES11.glTexEnvi(GLES11.GL_TEXTURE_ENV, GLES11.GL_TEXTURE_ENV_MODE, GLES11.GL_MODULATE);
         }
         if (null != this.diffuseTexture) {
             GLES11.glClientActiveTexture(GLES11.GL_TEXTURE2);
@@ -101,16 +124,32 @@ public class Material {
     }
     public void setUVs(FloatBuffer uvs) {
         if (false != this.hasTexture) {
+            GLES11.glClientActiveTexture(GLES11.GL_TEXTURE0);
+            GLES11.glActiveTexture(GLES11.GL_TEXTURE0);
             GLES11.glEnableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
+            GLES11.glTexCoordPointer(2, GLES11.GL_FLOAT, 0, uvs);
+        }
+        if (null != this.ambientTexture) {
+            GLES11.glClientActiveTexture(GLES11.GL_TEXTURE1);
+            GLES11.glActiveTexture(GLES11.GL_TEXTURE1);
+            GLES11.glEnableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
+            GLES11.glTexCoordPointer(2, GLES11.GL_FLOAT, 0, uvs);
         }
         if (null != this.diffuseTexture) {
+            GLES11.glClientActiveTexture(GLES11.GL_TEXTURE2);
             GLES11.glActiveTexture(GLES11.GL_TEXTURE2);
+            GLES11.glEnableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
             GLES11.glTexCoordPointer(2, GLES11.GL_FLOAT, 0, uvs);
         }
         return;
     }
     public void setDiffuseTexture(TextureAsset texture) {
         this.diffuseTexture = texture;
+        this.hasTexture = true;
+        return;
+    }
+    public void setAmbientTexture(TextureAsset texture) {
+        this.ambientTexture = texture;
         this.hasTexture = true;
         return;
     }

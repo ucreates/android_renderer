@@ -80,6 +80,11 @@ public class MaterialAsset {
                     TextureAsset texture = new TextureAsset();
                     texture.load(path, context);
                     material.setDiffuseTexture(texture);
+                } else if (false != command.equals("map_Ka")) {
+                    String path = data[1];
+                    TextureAsset texture = new TextureAsset();
+                    texture.load(path, context);
+                    material.setAmbientTexture(texture);
                 }
             }
         } catch (IOException e) {
