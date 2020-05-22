@@ -85,6 +85,11 @@ public class MaterialAsset {
                     TextureAsset texture = new TextureAsset();
                     texture.load(path, context);
                     material.setAmbientTexture(texture);
+                } else if (false != command.equals("map_Bump")) {
+                    String path = data[1];
+                    TextureAsset texture = new TextureAsset();
+                    texture.load(path, context);
+                    material.setNormalTexture(texture);
                 }
             }
         } catch (IOException e) {

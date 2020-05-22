@@ -20,6 +20,7 @@ public class Material {
     public boolean hasTexture = false;
     public TextureAsset diffuseTexture = null;
     public TextureAsset ambientTexture = null;
+    public TextureAsset normalTexture = null;
     public Material() {}
     public void enable() {
         if (false != this.hasTexture) {
@@ -67,6 +68,17 @@ public class Material {
         }
         if (null != this.specular) {
             GLES11.glMaterialfv(GLES11.GL_FRONT_AND_BACK, GLES11.GL_SPECULAR, this.specular);
+        }
+        if (null != this.normalTexture) {
+            GLES11.glClientActiveTexture(GLES11.GL_TEXTURE0);
+            GLES11.glActiveTexture(GLES11.GL_TEXTURE0);
+            GLES11.glBindTexture(GLES11.GL_TEXTURE_2D, this.normalTexture.textureId);
+            GLES11.glTexEnvi(GLES11.GL_TEXTURE_ENV, GLES11.GL_TEXTURE_ENV_MODE, GLES11.GL_COMBINE);
+            GLES11.glTexEnvi(GLES11.GL_TEXTURE_ENV, GLES11.GL_COMBINE_RGB, GLES11.GL_DOT3_RGB);
+            GLES11.glTexEnvi(GLES11.GL_TEXTURE_ENV, GLES11.GL_SRC0_RGB, GLES11.GL_PREVIOUS);
+            GLES11.glTexEnvi(GLES11.GL_TEXTURE_ENV, GLES11.GL_OPERAND0_RGB, GLES11.GL_SRC_COLOR);
+            GLES11.glTexEnvi(GLES11.GL_TEXTURE_ENV, GLES11.GL_SRC1_RGB, GLES11.GL_TEXTURE);
+            GLES11.glTexEnvi(GLES11.GL_TEXTURE_ENV, GLES11.GL_OPERAND1_RGB, GLES11.GL_SRC_COLOR);
         }
         if (null != this.ambientTexture) {
             GLES11.glClientActiveTexture(GLES11.GL_TEXTURE1);
@@ -150,6 +162,11 @@ public class Material {
     }
     public void setAmbientTexture(TextureAsset texture) {
         this.ambientTexture = texture;
+        this.hasTexture = true;
+        return;
+    }
+    public void setNormalTexture(TextureAsset texture) {
+        this.normalTexture = texture;
         this.hasTexture = true;
         return;
     }
