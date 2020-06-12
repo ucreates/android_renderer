@@ -196,7 +196,11 @@ public class GLES1Renderer {
         if (null != asset.material) {
             asset.material.reflect();
         }
-        GLES11.glDrawArrays(asset.renderMode, 0, asset.vertex.count);
+        if (null == asset.vertex.indicies) {
+            GLES11.glDrawArrays(asset.renderMode, 0, asset.vertex.count);
+        } else {
+            GLES11.glDrawElements(asset.renderMode, asset.vertex.indexCount, GLES11.GL_UNSIGNED_SHORT, asset.vertex.indicies);
+        }
         GLES11.glPopMatrix();
         GLES11.glDisableClientState(GLES11.GL_VERTEX_ARRAY);
         GLES11.glDisableClientState(GLES11.GL_COLOR_ARRAY);

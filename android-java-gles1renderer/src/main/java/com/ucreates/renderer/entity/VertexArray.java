@@ -11,16 +11,19 @@ package com.ucreates.renderer.entity;
 import com.ucreates.renderer.io.memory.Allocator;
 import com.ucreates.renderer.renderer.GLES1Renderer;
 import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Random;
 public class VertexArray {
     private static final int VERTEX_COUNT_PER_TRIANGLE = 3;
     public int dimension;
     public int count;
+    public int indexCount;
     public FloatBuffer vertices;
     public FloatBuffer colors;
     public FloatBuffer normals;
     public FloatBuffer uvs;
+    public ShortBuffer indicies;
     public VertexArray(int dimension) {
         this.dimension = dimension;
     }
@@ -82,6 +85,21 @@ public class VertexArray {
             tmpUVs[i] = uvFloatArray[i];
         }
         this.setUVs(tmpUVs);
+        return;
+    }
+    public void setIndicies(short[] indiciesArray) {
+        this.indicies = Allocator.allocateShort(indiciesArray.length);
+        this.indicies.put(indiciesArray).position(0);
+        this.indexCount = indiciesArray.length;
+        return;
+    }
+    public void setIndicies(ArrayList<Short> indiciesArray) {
+        Short[] indiciesShoatArray = indiciesArray.toArray(new Short[0]);
+        short tmpIndicies[] = new short[indiciesShoatArray.length];
+        for (int i = 0; i < indiciesShoatArray.length; i++) {
+            tmpIndicies[i] = indiciesShoatArray[i];
+        }
+        this.setIndicies(tmpIndicies);
         return;
     }
     public void setRandomColor() {
