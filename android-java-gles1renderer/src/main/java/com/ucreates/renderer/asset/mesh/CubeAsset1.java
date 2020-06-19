@@ -19,6 +19,7 @@ import com.ucreates.renderer.io.memory.Allocator;
 import com.ucreates.renderer.math.GLES1Angle;
 import com.ucreates.renderer.math.GLES1Normal;
 import com.ucreates.renderer.renderer.GLES1Renderer;
+import java.util.ArrayList;
 public class CubeAsset1 extends BaseAsset {
     public CubeAsset1(float width, float height, float depth, GLESColor color) {
         this.width = width;
@@ -342,6 +343,399 @@ public class CubeAsset1 extends BaseAsset {
     public void create(String texturePath, Context context) {
         this.texture = new TextureAsset();
         this.texture.load(texturePath, context);
+        float x = 0.5f * this.width;
+        float y = 0.5f * this.height;
+        float z = 0.5f * this.depth;
+        float verticies[] = {
+            // front1
+            -x,
+            y,
+            -z,
+            x,
+            y,
+            -z,
+            -x,
+            -y,
+            -z,
+            // front2
+            x,
+            y,
+            -z,
+            x,
+            -y,
+            -z,
+            -x,
+            -y,
+            -z,
+            // back1
+            -x,
+            y,
+            z,
+            -x,
+            -y,
+            z,
+            x,
+            y,
+            z,
+            // back2
+            x,
+            y,
+            z,
+            -x,
+            -y,
+            z,
+            x,
+            -y,
+            z,
+            // right1
+            x,
+            y,
+            z,
+            x,
+            -y,
+            z,
+            x,
+            y,
+            -z,
+            // right2
+            x,
+            y,
+            -z,
+            x,
+            -y,
+            z,
+            x,
+            -y,
+            -z,
+            // left1
+            -x,
+            y,
+            z,
+            -x,
+            y,
+            -z,
+            -x,
+            -y,
+            z,
+            // left2
+            -x,
+            y,
+            -z,
+            -x,
+            -y,
+            -z,
+            -x,
+            -y,
+            z,
+            // top1
+            -x,
+            y,
+            -z,
+            -x,
+            y,
+            z,
+            x,
+            y,
+            -z,
+            // top2
+            x,
+            y,
+            -z,
+            -x,
+            y,
+            z,
+            x,
+            y,
+            z,
+            // bottom1
+            -x,
+            -y,
+            -z,
+            x,
+            -y,
+            -z,
+            -x,
+            -y,
+            z,
+            // bottom2
+            x,
+            -y,
+            -z,
+            x,
+            -y,
+            z,
+            -x,
+            -y,
+            z,
+        };
+        float vertexColors[] = {
+            // front
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // back
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // left
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // right
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // top
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // bottom
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+        };
+        float uvs[] = {
+            // front
+            0.0f,
+            0.0f,
+            1.0f,
+            0.0f,
+            0.0f,
+            1.0f,
+            1.0f,
+            0.0f,
+            1.0f,
+            1.0f,
+            0.0f,
+            1.0f,
+            // back
+            0.0f,
+            0.0f,
+            0.0f,
+            1.0f,
+            1.0f,
+            0.0f,
+            1.0f,
+            0.0f,
+            0.0f,
+            1.0f,
+            1.0f,
+            1.0f,
+            // right
+            0.0f,
+            0.0f,
+            0.0f,
+            1.0f,
+            1.0f,
+            0.0f,
+            1.0f,
+            0.0f,
+            0.0f,
+            1.0f,
+            1.0f,
+            1.0f,
+            // left
+            0.0f,
+            0.0f,
+            1.0f,
+            0.0f,
+            0.0f,
+            1.0f,
+            1.0f,
+            0.0f,
+            1.0f,
+            1.0f,
+            0.0f,
+            1.0f,
+            // top
+            0.0f,
+            0.0f,
+            0.0f,
+            1.0f,
+            1.0f,
+            0.0f,
+            1.0f,
+            0.0f,
+            0.0f,
+            1.0f,
+            1.0f,
+            1.0f,
+            // bottom
+            0.0f,
+            0.0f,
+            1.0f,
+            0.0f,
+            0.0f,
+            1.0f,
+            1.0f,
+            0.0f,
+            1.0f,
+            1.0f,
+            0.0f,
+            1.0f,
+        };
+        int vertexCount = verticies.length / this.vertex.dimension;
+        int normalsLength = verticies.length;
+        int normalsMemsize = normalsLength * Allocator.GL_FLOAT_SIZE;
+        float[] normals = new float[normalsMemsize];
+        for (int i = 0; i < verticies.length; i += 9) {
+            float x1 = verticies[i];
+            float y1 = verticies[i + 1];
+            float z1 = verticies[i + 2];
+            float x2 = verticies[i + 3];
+            float y2 = verticies[i + 4];
+            float z2 = verticies[i + 5];
+            float x3 = verticies[i + 6];
+            float y3 = verticies[i + 7];
+            float z3 = verticies[i + 8];
+            Float3 triangleNormal = GLES1Normal.toNormal(x1, y1, z1, x2, y2, z2, x3, y3, z3);
+            normals[i] = triangleNormal.x;
+            normals[i + 1] = triangleNormal.y;
+            normals[i + 2] = triangleNormal.z;
+            normals[i + 3] = triangleNormal.x;
+            normals[i + 4] = triangleNormal.y;
+            normals[i + 5] = triangleNormal.z;
+            normals[i + 6] = triangleNormal.x;
+            normals[i + 7] = triangleNormal.y;
+            normals[i + 8] = triangleNormal.z;
+        }
+        this.vertex.setVertexCount(vertexCount);
+        this.vertex.setVertices(verticies);
+        this.vertex.setColors(vertexColors);
+        this.vertex.setNormals(normals);
+        this.vertex.setUVs(uvs);
+        return;
+    }
+    @Override
+    public void createMipmap(ArrayList<String> texturePaths, Context context) {
+        this.texture = new TextureAsset();
+        this.texture.loadMipmap(texturePaths, context);
         float x = 0.5f * this.width;
         float y = 0.5f * this.height;
         float z = 0.5f * this.depth;

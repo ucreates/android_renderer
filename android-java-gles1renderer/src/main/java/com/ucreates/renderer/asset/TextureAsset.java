@@ -21,6 +21,7 @@ import com.ucreates.renderer.renderer.GLES1Renderer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 public class TextureAsset {
     public int textureId;
     public Float2 uvRatio;
@@ -61,6 +62,48 @@ public class TextureAsset {
         } catch (IOException e) {
             Log.i("ANDROID_RENDERER, %s", e.getMessage());
         }
+        return;
+    }
+    public void loadMipmap(ArrayList<String> paths, Context context) {
+        int width = 0;
+        int height = 0;
+        int edge = 0;
+        int textureName[] = new int[1];
+        GLES11.glGenTextures(1, textureName, 0);
+        GLES11.glBindTexture(GLES11.GL_TEXTURE_2D, textureName[0]);
+        for (int i = 0; i < paths.size(); i++) {
+            AssetManager assetManager = context.getAssets();
+            try {
+                String path = paths.get(i);
+                InputStream stream = assetManager.open(path);
+                Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                int tmpWidth = bitmap.getWidth();
+                int tmpHeight = bitmap.getHeight();
+                int tmpEdge = tmpWidth >= tmpHeight ? tmpWidth : tmpHeight;
+                tmpEdge = GLES1Exponentiation.getExponentiation(tmpEdge);
+                width = 0 == width ? tmpWidth : width;
+                height = 0 == height ? tmpHeight : height;
+                edge = 0 == edge ? tmpEdge : edge;
+                int fileSize = tmpWidth * tmpHeight * GLES1Renderer.RGBA;
+                ByteBuffer bytes = Allocator.allocate(fileSize);
+                bitmap.copyPixelsToBuffer(bytes);
+                bytes.position(0);
+                GLES11.glTexParameteri(GLES11.GL_TEXTURE_2D, GLES11.GL_GENERATE_MIPMAP, GLES11.GL_TRUE);
+                GLES11.glTexParameteri(GLES11.GL_TEXTURE_2D, GLES11.GL_TEXTURE_WRAP_S, GLES11.GL_CLAMP_TO_EDGE);
+                GLES11.glTexParameteri(GLES11.GL_TEXTURE_2D, GLES11.GL_TEXTURE_WRAP_T, GLES11.GL_CLAMP_TO_EDGE);
+                GLES11.glTexParameteri(GLES11.GL_TEXTURE_2D, GLES11.GL_TEXTURE_MAG_FILTER, GLES11.GL_NEAREST);
+                GLES11.glTexParameteri(GLES11.GL_TEXTURE_2D, GLES11.GL_TEXTURE_MIN_FILTER, GLES11.GL_NEAREST_MIPMAP_NEAREST);
+                GLES11.glTexImage2D(GLES11.GL_TEXTURE_2D, i, GLES11.GL_RGBA, tmpEdge, tmpEdge, 0, GLES11.GL_RGBA, GLES11.GL_UNSIGNED_BYTE, bytes);
+                bitmap.recycle();
+            } catch (IOException e) {
+                Log.i("ANDROID_RENDERER, %s", e.getMessage());
+            }
+        }
+        float widthRate = (float) width / (float) edge;
+        float heightRate = (float) height / (float) edge;
+        this.textureId = textureName[0];
+        this.size = new Float2(width, height);
+        this.uvRatio = new Float2(widthRate, heightRate);
         return;
     }
 }

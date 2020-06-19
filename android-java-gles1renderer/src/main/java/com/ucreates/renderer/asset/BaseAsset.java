@@ -14,6 +14,7 @@ import com.ucreates.renderer.entity.GLESColor;
 import com.ucreates.renderer.entity.Material;
 import com.ucreates.renderer.entity.Transform;
 import com.ucreates.renderer.entity.VertexArray;
+import java.util.ArrayList;
 public abstract class BaseAsset {
     public int renderMode;
     public Transform transform;
@@ -39,6 +40,9 @@ public abstract class BaseAsset {
         return;
     }
     public void create(String texturePath, Context context) {
+        return;
+    }
+    public void createMipmap(ArrayList<String> texturePaths, Context context) {
         return;
     }
     public void setMaterial(Material material) {
