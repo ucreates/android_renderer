@@ -22,4 +22,25 @@ public class GLES1Normal {
         float nz = vx1 * vy2 - vy1 * vx2;
         return new Float3(nx, ny, nz);
     }
+    public static Float3 add(Float3 v1, Float3 v2) {
+        float x = v1.x + v2.x;
+        float y = v1.y + v2.y;
+        float z = v1.z + v2.z;
+        return new Float3(x, y, z);
+    }
+    public static Float3 toOne(Float3 vector) {
+        float x = 0.0f;
+        float y = 0.0f;
+        float z = 0.0f;
+        if (0 < Math.abs(vector.x)) {
+            x = vector.x / Math.abs(vector.x);
+        }
+        if (0 < Math.abs(vector.y)) {
+            y = vector.y / Math.abs(vector.y);
+        }
+        if (0 < Math.abs(vector.z)) {
+            z = vector.z / Math.abs(vector.z);
+        }
+        return new Float3(x, y, z);
+    }
 }
