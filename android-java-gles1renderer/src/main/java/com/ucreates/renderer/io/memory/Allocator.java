@@ -15,6 +15,7 @@ import java.nio.ShortBuffer;
 public class Allocator {
     public static final int GL_SHORT_SIZE = 2;
     public static final int GL_FLOAT_SIZE = 4;
+    public static final int GL_VECTOR3_SIZE = 12;
     public static ByteBuffer allocate(int count) {
         ByteBuffer buffer = ByteBuffer.allocateDirect(count);
         ByteOrder nativeOrder = ByteOrder.nativeOrder();
