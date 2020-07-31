@@ -102,11 +102,11 @@ public class TriangleAsset2 extends BaseAsset {
             0.0f,
             1.0f,
             // right down
-            this.texture.uvRatio.x,
+            1.0f,
             1.0f,
             // center top
             0.5f,
-            0.0f + vratio,
+            0.0f,
         };
         short indicies[] = {0, 1, 2};
         int vertexCount = verticies.length / this.vertex.dimension;
