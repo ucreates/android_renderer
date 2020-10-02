@@ -8,8 +8,10 @@
 // We hope the tips and helpful in developing.
 // ======================================================================
 package com.ucreates.renderer.asset.polygon;
+import android.content.Context;
 import android.opengl.GLES11;
 import com.ucreates.renderer.asset.BaseAsset;
+import com.ucreates.renderer.asset.TextureAsset;
 import com.ucreates.renderer.entity.GLESColor;
 import com.ucreates.renderer.entity.VertexArray;
 import com.ucreates.renderer.renderer.GLES1Renderer;
@@ -55,6 +57,56 @@ public class TriangleAsset3 extends BaseAsset {
         this.vertex.setVertexCount(vertexCount);
         this.vertex.setVertices(verticies);
         this.vertex.setColors(colors);
+        return;
+    }
+    @Override
+    public void create(String texturePath, Context context) {
+        this.texture = new TextureAsset();
+        this.texture.load(texturePath, context);
+        float verticies[] = {
+            // left down
+            -0.5f * this.width,
+            -0.5f * this.height,
+            // right down
+            0.5f * this.width,
+            -0.5f * this.height,
+            // center top
+            0.0f,
+            0.5f,
+        };
+        float vertexColors[] = {
+            // left down
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // right down
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // center top
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+        };
+        float uvs[] = {
+            // left down
+            0.0f,
+            1.0f,
+            // right down
+            1.0f,
+            1.0f,
+            // center top
+            0.5f,
+            0.0f,
+        };
+        int vertexCount = verticies.length / this.vertex.dimension;
+        this.vertex.setVertexCount(vertexCount);
+        this.vertex.setVertices(verticies);
+        this.vertex.setColors(vertexColors);
+        this.vertex.setUVs(uvs);
         return;
     }
 }
