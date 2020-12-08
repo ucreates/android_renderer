@@ -61,4 +61,56 @@ public class TriangleAsset4 extends BaseAsset {
         this.vertex.setIndicies(indicies);
         return;
     }
+    @Override
+    public void create(String texturePath, Context context) {
+        this.texture = new TextureAsset();
+        this.texture.load(texturePath, context);
+        float verticies[] = {
+            // left down
+            -0.5f * this.width,
+            -0.5f * this.height,
+            // right down
+            0.5f * this.width,
+            -0.5f * this.height,
+            // center top
+            0.0f,
+            0.5f,
+        };
+        float colors[] = {
+            // left down
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // right down
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // center top
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+        };
+        float uvs[] = {
+            //左下
+            0.0f,
+            1.0f,
+            //右下
+            1.0f,
+            1.0f,
+            //中央上
+            0.5f,
+            0.0f,
+        };
+        short indicies[] = {0, 1, 2};
+        int vertexCount = verticies.length / this.vertex.dimension;
+        this.vertex.setVertexCount(vertexCount);
+        this.vertex.setVertices(verticies);
+        this.vertex.setColors(colors);
+        this.vertex.setIndicies(indicies);
+        this.vertex.setUVs(uvs);
+        return;
+    }
 }
