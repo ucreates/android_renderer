@@ -71,4 +71,69 @@ public class RectangleAsset4 extends BaseAsset {
         this.vertex.setIndicies(indicies);
         return;
     }
+    @Override
+    public void create(String texturePath, Context context) {
+        this.texture = new TextureAsset();
+        this.texture.load(texturePath, context);
+        float x = 0.5f * this.width;
+        float y = 0.5f * this.height;
+        float vertices[] = {
+            // left down
+            -x,
+            -y,
+            // right down
+            x,
+            -y,
+            // left top
+            -x,
+            y,
+            // right top
+            x,
+            y,
+        };
+        float colors[] = {
+            // left down
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // right down
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // left top
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+            // right top
+            this.color.r,
+            this.color.g,
+            this.color.b,
+            this.color.a,
+        };
+        float uvs[] = {
+            //左下
+            0.0f,
+            1.0f,
+            //右下
+            1.0f,
+            1.0f,
+            //左上
+            0.0f,
+            0.0f,
+            //右上
+            1.0f,
+            0.0f,
+        };
+        short indicies[] = {0, 1, 2, 3};
+        int vertexCount = vertices.length / this.vertex.dimension;
+        this.vertex.setVertexCount(vertexCount);
+        this.vertex.setVertices(vertices);
+        this.vertex.setColors(colors);
+        this.vertex.setUVs(uvs);
+        this.vertex.setIndicies(indicies);
+        return;
+    }
 }
