@@ -9,6 +9,7 @@
 // ======================================================================
 package com.ucreates.renderer.asset;
 import android.content.Context;
+import android.opengl.GLES11;
 import com.ucreates.renderer.entity.GLESBlend;
 import com.ucreates.renderer.entity.GLESColor;
 import com.ucreates.renderer.entity.Material;
@@ -40,6 +41,9 @@ public abstract class BaseAsset {
         return;
     }
     public void create(String texturePath, Context context) {
+        return;
+    }
+    public void create(String texturePath, int textureUnit, Context context) {
         return;
     }
     public void createMipmap(ArrayList<String> texturePaths, Context context) {

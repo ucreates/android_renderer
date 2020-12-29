@@ -8,6 +8,7 @@
 // We hope the tips and helpful in developing.
 // ======================================================================
 package com.ucreates.renderer.entity;
+import android.content.Context;
 import android.opengl.GLES11;
 import com.ucreates.renderer.asset.TextureAsset;
 import com.ucreates.renderer.io.memory.Allocator;
@@ -155,18 +156,22 @@ public class Material {
         }
         return;
     }
-    public void setDiffuseTexture(TextureAsset texture) {
+    public void setDiffuseTexture(String path, Context context) {
+        TextureAsset texture = new TextureAsset();
+        texture.load(path, GLES11.GL_TEXTURE2, context);
         this.diffuseTexture = texture;
         this.hasTexture = true;
         return;
     }
-    public void setAmbientTexture(TextureAsset texture) {
-        this.ambientTexture = texture;
+    public void setAmbientTexture(String path, Context context) {
+        TextureAsset texture = new TextureAsset();
+        texture.load(path, GLES11.GL_TEXTURE1, context);
         this.hasTexture = true;
         return;
     }
-    public void setNormalTexture(TextureAsset texture) {
-        this.normalTexture = texture;
+    public void setNormalTexture(String path, Context context) {
+        TextureAsset texture = new TextureAsset();
+        texture.load(path, GLES11.GL_TEXTURE0, context);
         this.hasTexture = true;
         return;
     }

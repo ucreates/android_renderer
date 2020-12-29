@@ -24,6 +24,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 public class TextureAsset {
     public int textureId;
+    public int textureUnit;
     public Float2 uvRatio;
     public Float2 size;
     public int alphaComparisonFunction;
@@ -33,6 +34,10 @@ public class TextureAsset {
         this.alphaReferenceValue = 0.1f;
     }
     public void load(String path, Context context) {
+        this.load(path, GLES11.GL_TEXTURE0, context);
+        return;
+    }
+    public void load(String path, int textureUnit, Context context) {
         AssetManager assetManager = context.getAssets();
         try {
             InputStream stream = assetManager.open(path);
@@ -46,6 +51,8 @@ public class TextureAsset {
             bitmap.copyPixelsToBuffer(bytes);
             bytes.position(0);
             int textureName[] = new int[1];
+            GLES11.glEnableClientState(textureUnit);
+            GLES11.glActiveTexture(textureUnit);
             GLES11.glGenTextures(1, textureName, 0);
             GLES11.glBindTexture(GLES11.GL_TEXTURE_2D, textureName[0]);
             GLES11.glTexParameterf(GLES11.GL_TEXTURE_2D, GLES11.GL_TEXTURE_WRAP_S, GLES11.GL_CLAMP_TO_EDGE);
@@ -53,22 +60,30 @@ public class TextureAsset {
             GLES11.glTexParameterf(GLES11.GL_TEXTURE_2D, GLES11.GL_TEXTURE_MIN_FILTER, GLES11.GL_NEAREST);
             GLES11.glTexParameterf(GLES11.GL_TEXTURE_2D, GLES11.GL_TEXTURE_MAG_FILTER, GLES11.GL_NEAREST);
             GLES11.glTexImage2D(GLES11.GL_TEXTURE_2D, 0, GLES11.GL_RGBA, width, height, 0, GLES11.GL_RGBA, GLES11.GL_UNSIGNED_BYTE, bytes);
+            GLES11.glDisableClientState(textureUnit);
             bitmap.recycle();
             float widthRate = (float) width / (float) edge;
             float heightRate = (float) height / (float) edge;
             this.textureId = textureName[0];
             this.size = new Float2(width, height);
             this.uvRatio = new Float2(widthRate, heightRate);
+            this.textureUnit = textureUnit;
         } catch (IOException e) {
             Log.i("ANDROID_RENDERER, %s", e.getMessage());
         }
         return;
     }
     public void loadMipmap(ArrayList<String> paths, Context context) {
+        this.loadMipmap(paths, GLES11.GL_TEXTURE0, context);
+        return;
+    }
+    public void loadMipmap(ArrayList<String> paths, int textureUnit, Context context) {
         int width = 0;
         int height = 0;
         int edge = 0;
         int textureName[] = new int[1];
+        GLES11.glEnableClientState(textureUnit);
+        GLES11.glActiveTexture(textureUnit);
         GLES11.glGenTextures(1, textureName, 0);
         GLES11.glBindTexture(GLES11.GL_TEXTURE_2D, textureName[0]);
         for (int i = 0; i < paths.size(); i++) {
@@ -99,6 +114,7 @@ public class TextureAsset {
                 Log.i("ANDROID_RENDERER, %s", e.getMessage());
             }
         }
+        GLES11.glDisableClientState(textureUnit);
         float widthRate = (float) width / (float) edge;
         float heightRate = (float) height / (float) edge;
         this.textureId = textureName[0];

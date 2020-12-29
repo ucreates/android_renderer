@@ -34,6 +34,7 @@ public class GLES1Renderer {
     public Viewport viewport;
     public GLES1Camera camera;
     private GLES1Fog fog = null;
+    private int dimension;
     private boolean enableStencil;
     public void create() {
         this.lights = new ArrayList<GLES1Light>();
@@ -46,26 +47,37 @@ public class GLES1Renderer {
     public void rebind(Context context, int width, int height) {
         this.viewport.setScreenSize(context, width, height);
     }
+    public void clear() {
+        this.clear(false);
+        return;
+    }
+    public void clear(boolean depth) {
+        if (false == depth) {
+            this.viewport.update(this.camera);
+        } else {
+            GLES11.glClear(GLES11.GL_DEPTH_BUFFER_BIT);
+        }
+        return;
+    }
     public void transform(GL10 gl, int dimension) {
         if (DIMENSION2D == dimension) {
             float aspectRatio = this.viewport.getAspectRatio();
-            float near = this.camera.near;
-            float far = this.camera.far;
-            this.viewport.update(this.camera);
+            float near = this.camera.orthoNear;
+            float far = this.camera.orthoFar;
             this.projectonTransformMatrix.transform2D(aspectRatio, near, far);
             this.modelViewTransformMatrix.transform2D();
         } else {
             float aspectRatio = this.viewport.getAspectRatio();
             float fov = this.camera.fov;
-            float near = this.camera.near;
-            float far = this.camera.far;
+            float near = this.camera.perspectiveNear;
+            float far = this.camera.perspectiveFar;
             Float3 eye = this.camera.eye;
             Float3 center = this.camera.center;
             Float3 up = this.camera.up;
-            this.viewport.update(this.camera);
             this.projectonTransformMatrix.transform3D(gl, fov, aspectRatio, near, far);
             this.modelViewTransformMatrix.transform3D(gl, eye, center, up);
         }
+        this.dimension = dimension;
         return;
     }
     public void render(BaseWipeAsset asset, int wipeType, float delta, float totalTime) {
@@ -121,18 +133,13 @@ public class GLES1Renderer {
         if (null != this.fog) {
             GLES11.glEnable(GLES11.GL_FOG);
         }
-        if (null != asset.texture) {
-            GLES11.glEnable(GLES11.GL_TEXTURE_2D);
-            if (null != asset.blend) {
-                GLES11.glEnable(GLES11.GL_ALPHA_TEST);
-            }
-        } else if (null != asset.material && false != asset.material.hasTexture) {
+        if (null != asset.material && false != asset.material.hasTexture) {
             asset.material.enable();
             if (null != asset.blend) {
                 GLES11.glEnable(GLES11.GL_ALPHA_TEST);
             }
         }
-        if (0 < this.lights.size()) {
+        if (0 < this.lights.size() && this.dimension == GLES1Renderer.DIMENSION3D) {
             GLES11.glEnable(GLES11.GL_NORMALIZE);
             GLES11.glEnable(GLES11.GL_LIGHTING);
             if (null == asset.material) {
@@ -144,15 +151,14 @@ public class GLES1Renderer {
         }
         GLES11.glEnableClientState(GLES11.GL_VERTEX_ARRAY);
         GLES11.glEnableClientState(GLES11.GL_COLOR_ARRAY);
-        if (null != asset.texture) {
-            GLES11.glEnableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
-        }
-        if (0 < this.lights.size()) {
+        if (0 < this.lights.size() && this.dimension == GLES1Renderer.DIMENSION3D) {
             GLES11.glEnableClientState(GLES11.GL_NORMAL_ARRAY);
         }
         GLES11.glCullFace(GLES11.GL_BACK);
-        for (GLES1Light light : this.lights) {
-            light.illuminate();
+        if (this.dimension == GLES1Renderer.DIMENSION3D) {
+            for (GLES1Light light : this.lights) {
+                light.illuminate();
+            }
         }
         if (null != asset.blend) {
             GLES11.glBlendFunc(asset.blend.source, asset.blend.destination);
@@ -160,6 +166,13 @@ public class GLES1Renderer {
         GLES11.glVertexPointer(asset.vertex.dimension, GLES11.GL_FLOAT, 0, asset.vertex.vertices);
         GLES11.glColorPointer(RGBA, GLES11.GL_FLOAT, 0, asset.vertex.colors);
         if (null != asset.texture) {
+            GLES11.glEnableClientState(asset.texture.textureUnit);
+            GLES11.glActiveTexture(asset.texture.textureUnit);
+            GLES11.glEnable(GLES11.GL_TEXTURE_2D);
+            if (null != asset.blend) {
+                GLES11.glEnable(GLES11.GL_ALPHA_TEST);
+            }
+            GLES11.glEnableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
             GLES11.glTexCoordPointer(2, GLES11.GL_FLOAT, 0, asset.vertex.uvs);
             GLES11.glBindTexture(GLES11.GL_TEXTURE_2D, asset.texture.textureId);
             if (null != asset.blend) {
@@ -169,7 +182,7 @@ public class GLES1Renderer {
         if (null != asset.material) {
             asset.material.setUVs(asset.vertex.uvs);
         }
-        if (0 < this.lights.size()) {
+        if (0 < this.lights.size() && this.dimension == GLES1Renderer.DIMENSION3D) {
             GLES11.glNormalPointer(GLES11.GL_FLOAT, 0, asset.vertex.normals);
         }
         float tx = asset.transform.position.x;
@@ -204,7 +217,7 @@ public class GLES1Renderer {
         GLES11.glPopMatrix();
         GLES11.glDisableClientState(GLES11.GL_VERTEX_ARRAY);
         GLES11.glDisableClientState(GLES11.GL_COLOR_ARRAY);
-        if (0 < this.lights.size()) {
+        if (0 < this.lights.size() && this.dimension == GLES1Renderer.DIMENSION3D) {
             GLES11.glDisableClientState(GLES11.GL_NORMAL_ARRAY);
             for (GLES1Light light : this.lights) {
                 light.disable();
@@ -216,6 +229,8 @@ public class GLES1Renderer {
             GLES11.glDisable(GLES11.GL_NORMALIZE);
         }
         if (null != asset.texture) {
+            GLES11.glEnableClientState(asset.texture.textureUnit);
+            GLES11.glActiveTexture(asset.texture.textureUnit);
             GLES11.glDisableClientState(GLES11.GL_TEXTURE_COORD_ARRAY);
             GLES11.glDisable(GLES11.GL_TEXTURE_2D);
             if (null != asset.blend) {

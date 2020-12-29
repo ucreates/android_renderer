@@ -77,19 +77,13 @@ public class MaterialAsset {
                     }
                 } else if (false != command.equals("map_Kd")) {
                     String path = data[1];
-                    TextureAsset texture = new TextureAsset();
-                    texture.load(path, context);
-                    material.setDiffuseTexture(texture);
+                    material.setDiffuseTexture(path, context);
                 } else if (false != command.equals("map_Ka")) {
                     String path = data[1];
-                    TextureAsset texture = new TextureAsset();
-                    texture.load(path, context);
-                    material.setAmbientTexture(texture);
+                    material.setAmbientTexture(path, context);
                 } else if (false != command.equals("map_Bump")) {
                     String path = data[1];
-                    TextureAsset texture = new TextureAsset();
-                    texture.load(path, context);
-                    material.setNormalTexture(texture);
+                    material.setNormalTexture(path, context);
                 }
             }
         } catch (IOException e) {
