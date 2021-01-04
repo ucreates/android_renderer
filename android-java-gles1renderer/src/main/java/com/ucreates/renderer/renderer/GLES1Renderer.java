@@ -194,6 +194,13 @@ public class GLES1Renderer {
         float rx = asset.transform.rotation.x;
         float ry = asset.transform.rotation.y;
         float rz = asset.transform.rotation.z;
+        if (null != asset.texture && this.dimension == GLES1Renderer.DIMENSION2D) {
+            float aspectRatio = this.viewport.getAspectRatio();
+            float txr = (float) asset.texture.size.x / (float) this.viewport.width;
+            float tyr = (float) asset.texture.size.y / (float) this.viewport.height;
+            sx *= txr * aspectRatio;
+            sy *= tyr;
+        }
         GLES11.glPushMatrix();
         GLES11.glTranslatef(tx, ty, tz);
         GLES11.glScalef(sx, sy, sz);

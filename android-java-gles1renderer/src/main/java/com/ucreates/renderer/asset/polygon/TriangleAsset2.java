@@ -64,11 +64,15 @@ public class TriangleAsset2 extends BaseAsset {
     }
     @Override
     public void create(String texturePath, Context context) {
+        this.create(texturePath, GLES11.GL_TEXTURE0, context);
+        return;
+    }
+    @Override
+    public void create(String texturePath, int textureUnit, Context context) {
         this.texture = new TextureAsset();
-        this.texture.load(texturePath, context);
-        float vratio = 1.0f - this.texture.uvRatio.x;
-        float x = 0.5f * this.width * this.texture.uvRatio.x;
-        float y = 0.5f * this.height * this.texture.uvRatio.y;
+        this.texture.load(texturePath, textureUnit, context);
+        float x = this.width;
+        float y = this.height;
         float verticies[] = {
             // left down
             -x,

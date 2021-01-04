@@ -93,8 +93,8 @@ public class RectangleAsset1 extends BaseAsset {
     public void create(String texturePath, int textureUnit, Context context) {
         this.texture = new TextureAsset();
         this.texture.load(texturePath, textureUnit, context);
-        float x = 0.5f * this.width;
-        float y = 0.5f * this.height;
+        float x = this.width;
+        float y = this.height;
         float vertices[] = {
             // left down
             -x,

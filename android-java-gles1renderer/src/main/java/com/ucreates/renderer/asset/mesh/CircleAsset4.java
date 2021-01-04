@@ -90,8 +90,13 @@ public class CircleAsset4 extends BaseAsset {
     }
     @Override
     public void create(String texturePath, Context context) {
+        this.create(texturePath, GLES11.GL_TEXTURE0, context);
+        return;
+    }
+    @Override
+    public void create(String texturePath, int textureUnit, Context context) {
         this.texture = new TextureAsset();
-        this.texture.load(texturePath, context);
+        this.texture.load(texturePath, textureUnit, context);
         float uratio = this.texture.uvRatio.x;
         float v1ratio = this.texture.uvRatio.y;
         float v2ratio = 1.0f - this.texture.uvRatio.y;

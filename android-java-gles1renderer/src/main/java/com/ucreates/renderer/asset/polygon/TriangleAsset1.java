@@ -24,16 +24,18 @@ public class TriangleAsset1 extends BaseAsset {
     }
     @Override
     public void create() {
+        float x = 0.5f * this.width;
+        float y = 0.5f * this.height;
         float verticies[] = {
             // left down
-            -0.5f * this.width,
-            -0.5f * this.height,
+            -x,
+            -y,
             // right down
-            0.5f * this.width,
-            -0.5f * this.height,
+            x,
+            -y,
             // center top
             0.0f,
-            0.5f,
+            y,
         };
         float vertexColors[] = {
             // left down
@@ -60,18 +62,25 @@ public class TriangleAsset1 extends BaseAsset {
     }
     @Override
     public void create(String texturePath, Context context) {
+        this.create(texturePath, GLES11.GL_TEXTURE0, context);
+        return;
+    }
+    @Override
+    public void create(String texturePath, int textureUnit, Context context) {
         this.texture = new TextureAsset();
-        this.texture.load(texturePath, context);
+        this.texture.load(texturePath, textureUnit, context);
+        float x = this.width;
+        float y = this.height;
         float verticies[] = {
             // left down
-            -0.5f * this.width * this.texture.uvRatio.x,
-            -0.5f * this.height * this.texture.uvRatio.y,
+            -x,
+            -y,
             // right down
-            0.5f * this.width * this.texture.uvRatio.x,
-            -0.5f * this.height * this.texture.uvRatio.y,
+            x,
+            -y,
             // center top
             0.0f,
-            0.5f * this.height * this.texture.uvRatio.y,
+            y,
         };
         float vertexColors[] = {
             // left down
