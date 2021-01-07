@@ -9,8 +9,8 @@
 // ======================================================================
 package com.ucreates.renderer.enviroment;
 import android.opengl.GLES11;
-import com.ucreates.renderer.entity.GLESColor;
-import com.ucreates.renderer.io.memory.Allocator;
+import com.ucreates.renderer.entity.GLES1Color;
+import com.ucreates.renderer.io.memory.GLES1Allocator;
 import java.nio.FloatBuffer;
 public class GLES1Light {
     private int lightId;
@@ -23,7 +23,7 @@ public class GLES1Light {
         this.lightId = lightId;
         float[] positions = new float[4];
         positions[3] = 1.0f;
-        this.position = Allocator.allocateFloat(positions.length);
+        this.position = GLES1Allocator.allocateFloat(positions.length);
         this.position.put(positions).position(0);
     }
     public void enable() {
@@ -60,7 +60,7 @@ public class GLES1Light {
     public void setDirection(float x, float y, float z) {
         if (null == this.direction) {
             float[] directions = new float[4];
-            this.direction = Allocator.allocateFloat(directions.length);
+            this.direction = GLES1Allocator.allocateFloat(directions.length);
             this.direction.put(directions).position(0);
         }
         this.direction.put(0, x);
@@ -69,10 +69,10 @@ public class GLES1Light {
         this.direction.position(0);
         return;
     }
-    public void setAmbient(GLESColor color) {
+    public void setAmbient(GLES1Color color) {
         if (null == this.ambient) {
             float[] ambients = new float[4];
-            this.ambient = Allocator.allocateFloat(ambients.length);
+            this.ambient = GLES1Allocator.allocateFloat(ambients.length);
             this.ambient.put(ambients).position(0);
         }
         this.ambient.put(0, color.r);
@@ -82,10 +82,10 @@ public class GLES1Light {
         this.ambient.position(0);
         return;
     }
-    public void setDiffuse(GLESColor color) {
+    public void setDiffuse(GLES1Color color) {
         if (null == this.diffuse) {
             float[] diffuses = new float[4];
-            this.diffuse = Allocator.allocateFloat(diffuses.length);
+            this.diffuse = GLES1Allocator.allocateFloat(diffuses.length);
             this.diffuse.put(diffuses).position(0);
         }
         this.diffuse.put(0, color.r);
@@ -95,10 +95,10 @@ public class GLES1Light {
         this.diffuse.position(0);
         return;
     }
-    public void setSpecular(GLESColor color) {
+    public void setSpecular(GLES1Color color) {
         if (null == this.specular) {
             float[] specular = new float[4];
-            this.specular = Allocator.allocateFloat(specular.length);
+            this.specular = GLES1Allocator.allocateFloat(specular.length);
             this.specular.put(specular).position(0);
         }
         this.specular.put(0, color.r);

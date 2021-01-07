@@ -9,8 +9,8 @@
 // ======================================================================
 package com.ucreates.renderer.enviroment;
 import android.opengl.GLES11;
-import com.ucreates.renderer.entity.GLESColor;
-import com.ucreates.renderer.io.memory.Allocator;
+import com.ucreates.renderer.entity.GLES1Color;
+import com.ucreates.renderer.io.memory.GLES1Allocator;
 import java.nio.FloatBuffer;
 public class GLES1Fog {
     private int fogMode;
@@ -25,7 +25,7 @@ public class GLES1Fog {
         float[] positions = new float[2];
         positions[1] = 0.0f;
         positions[1] = 1.0f;
-        this.position = Allocator.allocateFloat(positions.length);
+        this.position = GLES1Allocator.allocateFloat(positions.length);
         this.position.put(positions).position(0);
     }
     public void mist() {
@@ -45,10 +45,10 @@ public class GLES1Fog {
         this.position.position(0);
         return;
     }
-    public void setColor(GLESColor color) {
+    public void setColor(GLES1Color color) {
         if (null == this.color) {
             float[] fogColor = new float[4];
-            this.color = Allocator.allocateFloat(fogColor.length);
+            this.color = GLES1Allocator.allocateFloat(fogColor.length);
             this.color.put(fogColor).position(0);
         }
         this.color.put(0, color.r);

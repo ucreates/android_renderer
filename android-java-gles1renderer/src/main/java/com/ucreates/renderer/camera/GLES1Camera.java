@@ -8,9 +8,8 @@
 // We hope the tips and helpful in developing.
 // ======================================================================
 package com.ucreates.renderer.camera;
-import android.opengl.GLES11;
 import android.renderscript.Float3;
-import com.ucreates.renderer.entity.GLESColor;
+import com.ucreates.renderer.entity.GLES1Color;
 import com.ucreates.renderer.renderer.GLES1Renderer;
 public class GLES1Camera {
     public float fov;
@@ -21,9 +20,9 @@ public class GLES1Camera {
     public Float3 eye;
     public Float3 center;
     public Float3 up;
-    public GLESColor clearColor;
+    public GLES1Color clearColor;
     public GLES1Camera() {
-        this.clearColor = GLESColor.black;
+        this.clearColor = GLES1Color.black;
         this.orthoNear = 1.0f;
         this.orthoFar = -1.0f;
         this.perspectiveNear = 0.1f;
@@ -43,7 +42,7 @@ public class GLES1Camera {
         }
         return;
     }
-    public void setClear(GLESColor clearColor) {
+    public void setClear(GLES1Color clearColor) {
         this.clearColor = clearColor;
         return;
     }

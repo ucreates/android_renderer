@@ -11,15 +11,15 @@ package com.ucreates.renderer.renderer;
 import android.content.Context;
 import android.opengl.GLES11;
 import android.renderscript.Float3;
-import com.ucreates.renderer.asset.BaseAsset;
-import com.ucreates.renderer.asset.wipe.BaseWipeAsset;
+import com.ucreates.renderer.asset.GLES1BaseAsset;
+import com.ucreates.renderer.asset.wipe.GLES1BaseWipeAsset;
 import com.ucreates.renderer.camera.GLES1Camera;
-import com.ucreates.renderer.entity.Mesh;
+import com.ucreates.renderer.entity.GLES1Mesh;
 import com.ucreates.renderer.enviroment.GLES1Fog;
 import com.ucreates.renderer.enviroment.GLES1Light;
-import com.ucreates.renderer.screen.Viewport;
-import com.ucreates.renderer.transform.matrix.ModelViewTransformMatrix;
-import com.ucreates.renderer.transform.matrix.ProjectonTransfomMatrix;
+import com.ucreates.renderer.screen.GLES1Viewport;
+import com.ucreates.renderer.transform.matrix.GLES1ModelViewTransformMatrix;
+import com.ucreates.renderer.transform.matrix.GLES1ProjectonTransfomMatrix;
 import java.util.ArrayList;
 import javax.microedition.khronos.opengles.GL10;
 public class GLES1Renderer {
@@ -29,18 +29,18 @@ public class GLES1Renderer {
     public static final int WIPEIN = 1;
     public static final int WIPEOUT = 2;
     public ArrayList<GLES1Light> lights;
-    private ProjectonTransfomMatrix projectonTransformMatrix;
-    private ModelViewTransformMatrix modelViewTransformMatrix;
-    public Viewport viewport;
+    private GLES1ProjectonTransfomMatrix projectonTransformMatrix;
+    private GLES1ModelViewTransformMatrix modelViewTransformMatrix;
+    public GLES1Viewport viewport;
     public GLES1Camera camera;
     private GLES1Fog fog = null;
     private int dimension;
     private boolean enableStencil;
     public void create() {
         this.lights = new ArrayList<GLES1Light>();
-        this.projectonTransformMatrix = new ProjectonTransfomMatrix();
-        this.modelViewTransformMatrix = new ModelViewTransformMatrix();
-        this.viewport = new Viewport();
+        this.projectonTransformMatrix = new GLES1ProjectonTransfomMatrix();
+        this.modelViewTransformMatrix = new GLES1ModelViewTransformMatrix();
+        this.viewport = new GLES1Viewport();
         this.camera = new GLES1Camera();
         this.enableStencil = false;
     }
@@ -80,7 +80,7 @@ public class GLES1Renderer {
         this.dimension = dimension;
         return;
     }
-    public void render(BaseWipeAsset asset, int wipeType, float delta, float totalTime) {
+    public void render(GLES1BaseWipeAsset asset, int wipeType, float delta, float totalTime) {
         GLES11.glEnable(GLES11.GL_STENCIL_TEST);
         GLES11.glEnable(GLES11.GL_CULL_FACE);
         GLES11.glCullFace(GLES11.GL_BACK);
@@ -114,13 +114,13 @@ public class GLES1Renderer {
         this.enableStencil = true;
         return;
     }
-    public void render(ArrayList<Mesh> meshes) {
-        for (Mesh mesh : meshes) {
+    public void render(ArrayList<GLES1Mesh> meshes) {
+        for (GLES1Mesh mesh : meshes) {
             this.render(mesh);
         }
         return;
     }
-    public void render(BaseAsset asset) {
+    public void render(GLES1BaseAsset asset) {
         if (null == asset.blend) {
             GLES11.glEnable(GLES11.GL_DEPTH_TEST);
         } else {
