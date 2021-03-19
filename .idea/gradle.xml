@@ -11,6 +11,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/android-java-gles1renderer" />
+            <option value="$PROJECT_DIR$/android-java-gles2renderer" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

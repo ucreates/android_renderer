@@ -1,1 +1,2 @@
 include ':android-java-gles1renderer'
+include ':android-java-gles2renderer'
