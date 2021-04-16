@@ -45,6 +45,12 @@ public abstract class GLES1BaseAsset {
     public void create(String texturePath, int textureUnit, Context context) {
         return;
     }
+    public void create(String texturePath, String textureUnitName, Context context) {
+        return;
+    }
+    public void create(String texturePath, int textureUnit, String textureUnitName, Context context) {
+        return;
+    }
     public void createMipmap(ArrayList<String> texturePaths, Context context) {
         return;
     }

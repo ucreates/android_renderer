@@ -88,7 +88,11 @@ public class GLES2Renderer {
         GLES2Shader.setUniformMatrix4fv(asset.programObject.handle, this.viewAttributeName, this.viewTransformMatrix.matrix);
         GLES2Shader.setUniformMatrix4fv(asset.programObject.handle, this.modelAttributeName, modelMatrix.getArray());
         asset.bind(delta);
-        GLES20.glDrawArrays(asset.renderMode, 0, asset.vertex.getCount());
+        if (0 < asset.vertex.getIndexCount()) {
+            GLES20.glDrawElements(asset.renderMode, asset.vertex.getIndexCount(), GLES20.GL_UNSIGNED_SHORT, 0);
+        } else {
+            GLES20.glDrawArrays(asset.renderMode, 0, asset.vertex.getCount());
+        }
         GLES20.glDisable(GLES20.GL_DEPTH_TEST);
         GLES20.glDisable(GLES20.GL_CULL_FACE);
         GLES20.glUseProgram(0);

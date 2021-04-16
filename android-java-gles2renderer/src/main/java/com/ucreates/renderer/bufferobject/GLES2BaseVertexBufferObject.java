@@ -25,6 +25,9 @@ public class GLES2BaseVertexBufferObject extends GLES2BaseBufferObject {
     public float[] normals = new float[0];
     public float[] uvs = new float[0];
     public FloatBuffer elements;
+    public GLES2BaseVertexBufferObject() {
+        this.dimension = 0;
+    }
     public GLES2BaseVertexBufferObject(int dimension) {
         this.dimension = dimension;
     }

@@ -9,30 +9,30 @@
 // ======================================================================
 package com.ucreates.renderer.asset.mesh;
 import android.content.Context;
-import android.opengl.GLES11;
+import android.opengl.GLES20;
 import android.renderscript.Float3;
-import com.ucreates.renderer.asset.GLES1BaseAsset;
-import com.ucreates.renderer.asset.GLES1TextureAsset;
-import com.ucreates.renderer.entity.GLES1Color;
-import com.ucreates.renderer.entity.GLES1VertexArray;
-import com.ucreates.renderer.io.memory.GLES1Allocator;
-import com.ucreates.renderer.math.GLES1Normal;
-import com.ucreates.renderer.renderer.GLES1Renderer;
-public class GLES1SphereAsset2 extends GLES1BaseAsset {
+import com.ucreates.renderer.asset.GLES2BaseAsset;
+import com.ucreates.renderer.asset.GLES2TextureAsset;
+import com.ucreates.renderer.entity.GLES2Color;
+import com.ucreates.renderer.entity.GLES2Vertex;
+import com.ucreates.renderer.io.memory.GLES2Allocator;
+import com.ucreates.renderer.math.GLES2Normal;
+import com.ucreates.renderer.renderer.GLES2Renderer;
+public class GLES2SphereAsset2 extends GLES2BaseAsset {
     private int divideCount;
     private float radius;
-    public GLES1SphereAsset2(float radius, int divideCount, GLES1Color color) {
+    public GLES2SphereAsset2(float radius, int divideCount, GLES2Color color) {
         this.radius = radius;
         this.color = color;
         this.divideCount = divideCount;
-        this.renderMode = GLES11.GL_TRIANGLES;
-        this.vertex = new GLES1VertexArray(GLES1Renderer.DIMENSION3D);
+        this.renderMode = GLES20.GL_TRIANGLES;
+        this.vertex = new GLES2Vertex(GLES2Renderer.DIMENSION3D);
     }
     @Override
     public void create() {
-        int vertexCount = (this.divideCount - 1) * this.divideCount * 2 * GLES1Renderer.DIMENSION3D;
-        int verticesLength = this.divideCount * this.divideCount * GLES1Renderer.DIMENSION3D;
-        int colorsLength = this.divideCount * this.divideCount * GLES1Renderer.RGBA;
+        int vertexCount = (this.divideCount - 1) * this.divideCount * 2 * GLES2Renderer.DIMENSION3D;
+        int verticesLength = this.divideCount * this.divideCount * GLES2Renderer.DIMENSION3D;
+        int colorsLength = this.divideCount * this.divideCount * GLES2Renderer.RGBA;
         int normalsLength = verticesLength;
         int surfaceNormalsLength = this.divideCount * this.divideCount;
         int indiciesLength = vertexCount;
@@ -60,7 +60,7 @@ public class GLES1SphereAsset2 extends GLES1BaseAsset {
                 vertices[vidx] = x * this.radius;
                 vertices[vidx + 1] = y * this.radius;
                 vertices[vidx + 2] = z * this.radius;
-                vidx += GLES1Renderer.DIMENSION3D;
+                vidx += GLES2Renderer.DIMENSION3D;
             }
         }
         int iidx = 0;
@@ -84,10 +84,10 @@ public class GLES1SphereAsset2 extends GLES1BaseAsset {
                 if (v4 == div) {
                     v4 = 0;
                 }
-                int v1idx = v1 * GLES1Renderer.DIMENSION3D;
-                int v2idx = v2 * GLES1Renderer.DIMENSION3D;
-                int v3idx = v3 * GLES1Renderer.DIMENSION3D;
-                int v4idx = v4 * GLES1Renderer.DIMENSION3D;
+                int v1idx = v1 * GLES2Renderer.DIMENSION3D;
+                int v2idx = v2 * GLES2Renderer.DIMENSION3D;
+                int v3idx = v3 * GLES2Renderer.DIMENSION3D;
+                int v4idx = v4 * GLES2Renderer.DIMENSION3D;
                 indicies[iidx] = (short) v1;
                 indicies[iidx + 1] = (short) v2;
                 indicies[iidx + 2] = (short) v3;
@@ -116,14 +116,14 @@ public class GLES1SphereAsset2 extends GLES1BaseAsset {
                 Float3 surfaceNormal2 = null != surfaceNormals[v2] ? surfaceNormals[v2] : new Float3();
                 Float3 surfaceNormal3 = null != surfaceNormals[v3] ? surfaceNormals[v3] : new Float3();
                 Float3 surfaceNormal4 = null != surfaceNormals[v4] ? surfaceNormals[v4] : new Float3();
-                Float3 triangleNormal1 = GLES1Normal.toNormal(x1, y1, z1, x2, y2, z2, x3, y3, z3);
-                Float3 triangleNormal2 = GLES1Normal.toNormal(x4, y4, z4, x5, y5, z5, x6, y6, z6);
-                surfaceNormals[v1] = GLES1Normal.add(surfaceNormal1, triangleNormal1);
-                surfaceNormals[v2] = GLES1Normal.add(surfaceNormal2, triangleNormal1);
-                surfaceNormals[v3] = GLES1Normal.add(surfaceNormal3, triangleNormal1);
-                surfaceNormals[v3] = GLES1Normal.add(surfaceNormal3, triangleNormal2);
-                surfaceNormals[v2] = GLES1Normal.add(surfaceNormal2, triangleNormal2);
-                surfaceNormals[v4] = GLES1Normal.add(surfaceNormal4, triangleNormal2);
+                Float3 triangleNormal1 = GLES2Normal.toNormal(x1, y1, z1, x2, y2, z2, x3, y3, z3);
+                Float3 triangleNormal2 = GLES2Normal.toNormal(x4, y4, z4, x5, y5, z5, x6, y6, z6);
+                surfaceNormals[v1] = GLES2Normal.add(surfaceNormal1, triangleNormal1);
+                surfaceNormals[v2] = GLES2Normal.add(surfaceNormal2, triangleNormal1);
+                surfaceNormals[v3] = GLES2Normal.add(surfaceNormal3, triangleNormal1);
+                surfaceNormals[v3] = GLES2Normal.add(surfaceNormal3, triangleNormal2);
+                surfaceNormals[v2] = GLES2Normal.add(surfaceNormal2, triangleNormal2);
+                surfaceNormals[v4] = GLES2Normal.add(surfaceNormal4, triangleNormal2);
                 iidx += 6;
             }
         }
@@ -133,9 +133,9 @@ public class GLES1SphereAsset2 extends GLES1BaseAsset {
             normals[nidx] = vn.x;
             normals[nidx + 1] = vn.y;
             normals[nidx + 2] = vn.z;
-            nidx += GLES1Renderer.DIMENSION3D;
+            nidx += GLES2Renderer.DIMENSION3D;
         }
-        for (int i = 0; i < colorsLength; i += GLES1Renderer.RGBA) {
+        for (int i = 0; i < colorsLength; i += GLES2Renderer.RGBA) {
             colors[i] = this.color.r;
             colors[i + 1] = this.color.g;
             colors[i + 2] = this.color.b;
@@ -146,23 +146,25 @@ public class GLES1SphereAsset2 extends GLES1BaseAsset {
         this.vertex.setColors(colors);
         this.vertex.setNormals(normals);
         this.vertex.setIndicies(indicies);
+        this.vertex.allocateBuffer();
         return;
     }
     @Override
-    public void create(String texturePath, Context context) {
-        this.create(texturePath, GLES11.GL_TEXTURE0, context);
+    public void create(String texturePath, String textureUnitName, Context context) {
+        this.create(texturePath, GLES20.GL_TEXTURE0, textureUnitName, context);
         return;
     }
     @Override
-    public void create(String texturePath, int textureUnit, Context context) {
-        this.texture = new GLES1TextureAsset();
+    public void create(String texturePath, int textureUnit, String textureUnitName, Context context) {
+        this.texture = new GLES2TextureAsset();
+        this.texture.setTextureUnit(textureUnitName, textureUnit);
         this.texture.load(texturePath, textureUnit, context);
-        int vertexCount = (this.divideCount - 1) * this.divideCount * 2 * GLES1Renderer.DIMENSION3D;
-        int verticesLength = this.divideCount * this.divideCount * GLES1Renderer.DIMENSION3D;
-        int colorsLength = this.divideCount * this.divideCount * GLES1Renderer.RGBA;
+        int vertexCount = (this.divideCount - 1) * this.divideCount * 2 * GLES2Renderer.DIMENSION3D;
+        int verticesLength = this.divideCount * this.divideCount * GLES2Renderer.DIMENSION3D;
+        int colorsLength = this.divideCount * this.divideCount * GLES2Renderer.RGBA;
         int normalsLength = verticesLength;
         int surfaceNormalsLength = this.divideCount * this.divideCount;
-        int uvsLength = this.divideCount * this.divideCount * GLES1Renderer.DIMENSION2D;
+        int uvsLength = this.divideCount * this.divideCount * GLES2Renderer.DIMENSION2D;
         int indiciesLength = vertexCount;
         int verticesMemsize = verticesLength;
         int colorsMemsize = colorsLength;
@@ -193,8 +195,8 @@ public class GLES1SphereAsset2 extends GLES1BaseAsset {
                 vertices[vidx + 2] = z * this.radius;
                 uvs[uvidx] = (float) u;
                 uvs[uvidx + 1] = (float) v;
-                vidx += GLES1Renderer.DIMENSION3D;
-                uvidx += GLES1Renderer.DIMENSION2D;
+                vidx += GLES2Renderer.DIMENSION3D;
+                uvidx += GLES2Renderer.DIMENSION2D;
             }
         }
         int iidx = 0;
@@ -218,10 +220,10 @@ public class GLES1SphereAsset2 extends GLES1BaseAsset {
                 if (v4 == div) {
                     v4 = 0;
                 }
-                int v1idx = v1 * GLES1Renderer.DIMENSION3D;
-                int v2idx = v2 * GLES1Renderer.DIMENSION3D;
-                int v3idx = v3 * GLES1Renderer.DIMENSION3D;
-                int v4idx = v4 * GLES1Renderer.DIMENSION3D;
+                int v1idx = v1 * GLES2Renderer.DIMENSION3D;
+                int v2idx = v2 * GLES2Renderer.DIMENSION3D;
+                int v3idx = v3 * GLES2Renderer.DIMENSION3D;
+                int v4idx = v4 * GLES2Renderer.DIMENSION3D;
                 indicies[iidx] = (short) v1;
                 indicies[iidx + 1] = (short) v2;
                 indicies[iidx + 2] = (short) v3;
@@ -250,14 +252,14 @@ public class GLES1SphereAsset2 extends GLES1BaseAsset {
                 Float3 surfaceNormal2 = null != surfaceNormals[v2] ? surfaceNormals[v2] : new Float3();
                 Float3 surfaceNormal3 = null != surfaceNormals[v3] ? surfaceNormals[v3] : new Float3();
                 Float3 surfaceNormal4 = null != surfaceNormals[v4] ? surfaceNormals[v4] : new Float3();
-                Float3 triangleNormal1 = GLES1Normal.toNormal(x1, y1, z1, x2, y2, z2, x3, y3, z3);
-                Float3 triangleNormal2 = GLES1Normal.toNormal(x4, y4, z4, x5, y5, z5, x6, y6, z6);
-                surfaceNormals[v1] = GLES1Normal.add(surfaceNormal1, triangleNormal1);
-                surfaceNormals[v2] = GLES1Normal.add(surfaceNormal2, triangleNormal1);
-                surfaceNormals[v3] = GLES1Normal.add(surfaceNormal3, triangleNormal1);
-                surfaceNormals[v3] = GLES1Normal.add(surfaceNormal3, triangleNormal2);
-                surfaceNormals[v2] = GLES1Normal.add(surfaceNormal2, triangleNormal2);
-                surfaceNormals[v4] = GLES1Normal.add(surfaceNormal4, triangleNormal2);
+                Float3 triangleNormal1 = GLES2Normal.toNormal(x1, y1, z1, x2, y2, z2, x3, y3, z3);
+                Float3 triangleNormal2 = GLES2Normal.toNormal(x4, y4, z4, x5, y5, z5, x6, y6, z6);
+                surfaceNormals[v1] = GLES2Normal.add(surfaceNormal1, triangleNormal1);
+                surfaceNormals[v2] = GLES2Normal.add(surfaceNormal2, triangleNormal1);
+                surfaceNormals[v3] = GLES2Normal.add(surfaceNormal3, triangleNormal1);
+                surfaceNormals[v3] = GLES2Normal.add(surfaceNormal3, triangleNormal2);
+                surfaceNormals[v2] = GLES2Normal.add(surfaceNormal2, triangleNormal2);
+                surfaceNormals[v4] = GLES2Normal.add(surfaceNormal4, triangleNormal2);
                 iidx += 6;
             }
         }
@@ -267,9 +269,9 @@ public class GLES1SphereAsset2 extends GLES1BaseAsset {
             normals[nidx] = vn.x;
             normals[nidx + 1] = vn.y;
             normals[nidx + 2] = vn.z;
-            nidx += GLES1Renderer.DIMENSION3D;
+            nidx += GLES2Renderer.DIMENSION3D;
         }
-        for (int i = 0; i < colorsLength; i += GLES1Renderer.RGBA) {
+        for (int i = 0; i < colorsLength; i += GLES2Renderer.RGBA) {
             colors[i] = this.color.r;
             colors[i + 1] = this.color.g;
             colors[i + 2] = this.color.b;
@@ -281,6 +283,7 @@ public class GLES1SphereAsset2 extends GLES1BaseAsset {
         this.vertex.setUVs(uvs);
         this.vertex.setNormals(normals);
         this.vertex.setIndicies(indicies);
+        this.vertex.allocateBuffer();
         return;
     }
 }

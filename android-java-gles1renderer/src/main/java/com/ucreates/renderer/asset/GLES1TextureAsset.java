@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.opengl.GLES10;
 import android.opengl.GLES11;
 import android.renderscript.Float2;
 import android.util.Log;
@@ -25,16 +26,18 @@ import java.util.ArrayList;
 public class GLES1TextureAsset {
     public int textureId;
     public int textureUnit;
+    public String textureUnitName;
+    public int textureNumber;
     public Float2 uvRatio;
     public Float2 size;
     public int alphaComparisonFunction;
     public float alphaReferenceValue;
     public GLES1TextureAsset() {
-        this.alphaComparisonFunction = GLES11.GL_GREATER;
+        this.alphaComparisonFunction = GLES10.GL_GREATER;
         this.alphaReferenceValue = 0.1f;
     }
     public void load(String path, Context context) {
-        this.load(path, GLES11.GL_TEXTURE0, context);
+        this.load(path, GLES10.GL_TEXTURE0, context);
         return;
     }
     public void load(String path, int textureUnit, Context context) {
@@ -51,16 +54,16 @@ public class GLES1TextureAsset {
             bitmap.copyPixelsToBuffer(bytes);
             bytes.position(0);
             int textureName[] = new int[1];
-            GLES11.glEnableClientState(textureUnit);
-            GLES11.glActiveTexture(textureUnit);
-            GLES11.glGenTextures(1, textureName, 0);
-            GLES11.glBindTexture(GLES11.GL_TEXTURE_2D, textureName[0]);
-            GLES11.glTexParameterf(GLES11.GL_TEXTURE_2D, GLES11.GL_TEXTURE_WRAP_S, GLES11.GL_CLAMP_TO_EDGE);
-            GLES11.glTexParameterf(GLES11.GL_TEXTURE_2D, GLES11.GL_TEXTURE_WRAP_T, GLES11.GL_CLAMP_TO_EDGE);
-            GLES11.glTexParameterf(GLES11.GL_TEXTURE_2D, GLES11.GL_TEXTURE_MIN_FILTER, GLES11.GL_NEAREST);
-            GLES11.glTexParameterf(GLES11.GL_TEXTURE_2D, GLES11.GL_TEXTURE_MAG_FILTER, GLES11.GL_NEAREST);
-            GLES11.glTexImage2D(GLES11.GL_TEXTURE_2D, 0, GLES11.GL_RGBA, width, height, 0, GLES11.GL_RGBA, GLES11.GL_UNSIGNED_BYTE, bytes);
-            GLES11.glDisableClientState(textureUnit);
+            GLES10.glEnableClientState(textureUnit);
+            GLES10.glActiveTexture(textureUnit);
+            GLES10.glGenTextures(1, textureName, 0);
+            GLES10.glBindTexture(GLES10.GL_TEXTURE_2D, textureName[0]);
+            GLES10.glTexParameterf(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_WRAP_S, GLES10.GL_CLAMP_TO_EDGE);
+            GLES10.glTexParameterf(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_WRAP_T, GLES10.GL_CLAMP_TO_EDGE);
+            GLES10.glTexParameterf(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_MIN_FILTER, GLES10.GL_NEAREST);
+            GLES10.glTexParameterf(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_MAG_FILTER, GLES10.GL_NEAREST);
+            GLES10.glTexImage2D(GLES10.GL_TEXTURE_2D, 0, GLES10.GL_RGBA, width, height, 0, GLES10.GL_RGBA, GLES10.GL_UNSIGNED_BYTE, bytes);
+            GLES10.glDisableClientState(textureUnit);
             bitmap.recycle();
             float widthRate = (float) width / (float) edge;
             float heightRate = (float) height / (float) edge;
@@ -74,7 +77,7 @@ public class GLES1TextureAsset {
         return;
     }
     public void loadMipmap(ArrayList<String> paths, Context context) {
-        this.loadMipmap(paths, GLES11.GL_TEXTURE0, context);
+        this.loadMipmap(paths, GLES10.GL_TEXTURE0, context);
         return;
     }
     public void loadMipmap(ArrayList<String> paths, int textureUnit, Context context) {
@@ -82,10 +85,10 @@ public class GLES1TextureAsset {
         int height = 0;
         int edge = 0;
         int textureName[] = new int[1];
-        GLES11.glEnableClientState(textureUnit);
-        GLES11.glActiveTexture(textureUnit);
-        GLES11.glGenTextures(1, textureName, 0);
-        GLES11.glBindTexture(GLES11.GL_TEXTURE_2D, textureName[0]);
+        GLES10.glEnableClientState(textureUnit);
+        GLES10.glActiveTexture(textureUnit);
+        GLES10.glGenTextures(1, textureName, 0);
+        GLES10.glBindTexture(GLES10.GL_TEXTURE_2D, textureName[0]);
         for (int i = 0; i < paths.size(); i++) {
             AssetManager assetManager = context.getAssets();
             try {
@@ -103,18 +106,17 @@ public class GLES1TextureAsset {
                 ByteBuffer bytes = GLES1Allocator.allocate(fileSize);
                 bitmap.copyPixelsToBuffer(bytes);
                 bytes.position(0);
-                GLES11.glTexParameteri(GLES11.GL_TEXTURE_2D, GLES11.GL_GENERATE_MIPMAP, GLES11.GL_TRUE);
-                GLES11.glTexParameteri(GLES11.GL_TEXTURE_2D, GLES11.GL_TEXTURE_WRAP_S, GLES11.GL_CLAMP_TO_EDGE);
-                GLES11.glTexParameteri(GLES11.GL_TEXTURE_2D, GLES11.GL_TEXTURE_WRAP_T, GLES11.GL_CLAMP_TO_EDGE);
-                GLES11.glTexParameteri(GLES11.GL_TEXTURE_2D, GLES11.GL_TEXTURE_MAG_FILTER, GLES11.GL_NEAREST);
-                GLES11.glTexParameteri(GLES11.GL_TEXTURE_2D, GLES11.GL_TEXTURE_MIN_FILTER, GLES11.GL_NEAREST_MIPMAP_NEAREST);
-                GLES11.glTexImage2D(GLES11.GL_TEXTURE_2D, i, GLES11.GL_RGBA, tmpEdge, tmpEdge, 0, GLES11.GL_RGBA, GLES11.GL_UNSIGNED_BYTE, bytes);
+                GLES11.glTexParameteri(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_WRAP_S, GLES10.GL_CLAMP_TO_EDGE);
+                GLES11.glTexParameteri(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_WRAP_T, GLES10.GL_CLAMP_TO_EDGE);
+                GLES11.glTexParameteri(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_MAG_FILTER, GLES10.GL_NEAREST);
+                GLES11.glTexParameteri(GLES10.GL_TEXTURE_2D, GLES10.GL_TEXTURE_MIN_FILTER, GLES10.GL_NEAREST_MIPMAP_NEAREST);
+                GLES11.glTexImage2D(GLES10.GL_TEXTURE_2D, i, GLES10.GL_RGBA, tmpEdge, tmpEdge, 0, GLES10.GL_RGBA, GLES10.GL_UNSIGNED_BYTE, bytes);
                 bitmap.recycle();
             } catch (IOException e) {
                 Log.i("ANDROID_RENDERER, %s", e.getMessage());
             }
         }
-        GLES11.glDisableClientState(textureUnit);
+        GLES10.glDisableClientState(textureUnit);
         float widthRate = (float) width / (float) edge;
         float heightRate = (float) height / (float) edge;
         this.textureId = textureName[0];
